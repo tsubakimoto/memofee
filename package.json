@@ -1,0 +1,23 @@
+{
+  "name": "memofee",
+  "version": "1.0.0",
+  "description": "A feed app that allows you to take notes.",
+  "main": "app.js",
+  "scripts": {
+    "dev": "node src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tsubakimoto/memofee.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tsubakimoto/memofee/issues"
+  },
+  "homepage": "https://github.com/tsubakimoto/memofee#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
