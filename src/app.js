@@ -1,5 +1,6 @@
 // エントリーポイント
 const express = require('express');
+const path = require('path');
 const app = express();
 
 // ミドルウェア設定例
@@ -13,6 +14,10 @@ app.set('view engine', 'ejs');
 app.get('/', (req, res) => {
   res.send('Hello, Express!');
 });
+
+// ひらがな行リストページのルート
+const hiraganaRouter = require('./routes/hiragana');
+app.use('/hiragana', hiraganaRouter);
 
 // サーバー起動
 const PORT = process.env.PORT || 3000;

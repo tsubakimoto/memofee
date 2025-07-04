@@ -1,0 +1,32 @@
+<% const gyos = [
+  { label: 'あ行', chars: ['あ', 'い', 'う', 'え', 'お'] },
+  { label: 'か行', chars: ['か', 'き', 'く', 'け', 'こ'] },
+  { label: 'さ行', chars: ['さ', 'し', 'す', 'せ', 'そ'] },
+  { label: 'た行', chars: ['た', 'ち', 'つ', 'て', 'と'] },
+  { label: 'な行', chars: ['な', 'に', 'ぬ', 'ね', 'の'] },
+  { label: 'は行', chars: ['は', 'ひ', 'ふ', 'へ', 'ほ'] },
+  { label: 'ま行', chars: ['ま', 'み', 'む', 'め', 'も'] },
+  { label: 'や行', chars: ['や', '', 'ゆ', '', 'よ'] },
+  { label: 'ら行', chars: ['ら', 'り', 'る', 'れ', 'ろ'] },
+  { label: 'わ行', chars: ['わ', '', 'を', '', 'ん'] }
+]; %>
+<% const selected = typeof gyo === 'string' ? gyo : 'あ行'; %>
+<% /* 左ペイン: 行リストHTML生成 */ %>
+<% let leftHtml = '<ul style="list-style:none;padding:0;">';
+gyos.forEach((g) => {
+  const cls = selected === g.label ? 'gyo-selected' : 'gyo-link';
+  leftHtml += `<li style='margin:8px 0;'><a href='?gyo=${encodeURIComponent(g.label)}' class='${cls}'>${g.label}</a></li>`;
+});
+leftHtml += '</ul>';
+%>
+<% /* 右ペイン: 選択行のひらがな表示 */ %>
+<% const selectedGyo = gyos.find(g => g.label === selected) || gyos[0]; %>
+<% let rightHtml = `<div><h2>${selectedGyo.label}</h2><div style='font-size:2rem;'>`;
+rightHtml += selectedGyo.chars.map(c => c ? `<span style='margin:0 8px;'>${c}</span>` : '').join('');
+rightHtml += '</div></div>';
+%>
+<%- include('layout', {
+  title: 'ひらがな行リスト',
+  left: leftHtml,
+  right: rightHtml
+}) %>
