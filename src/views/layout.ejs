@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title || '2ペインレイアウト' %></title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    .container {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+    }
+    .left-margin {
+      width: 10%;
+      background: #f5f5f5;
+    }
+    .left-pane {
+      width: 20%;
+      background: #e0e0e0;
+    }
+    .right-pane {
+      width: 60%;
+      background: #ffffff;
+    }
+    .right-margin {
+      width: 10%;
+      background: #f5f5f5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left-margin"></div>
+    <div class="left-pane">
+      <%- typeof left !== 'undefined' ? left : '' %>
+    </div>
+    <div class="right-pane">
+      <%- typeof right !== 'undefined' ? right : '' %>
+    </div>
+    <div class="right-margin"></div>
+  </div>
+</body>
+</html>
