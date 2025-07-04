@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/tsubakimoto/memofee#readme",
   "dependencies": {
+    "ejs": "^3.1.10",
     "express": "^5.1.0"
   }
 }
