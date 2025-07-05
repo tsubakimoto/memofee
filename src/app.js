@@ -4,6 +4,7 @@ const app = express();
 
 // ミドルウェア設定例
 app.use(express.json());
+app.use(express.static('public'));
 
 // ビューエンジン設定
 app.set('views', path.join(__dirname, 'views'));
