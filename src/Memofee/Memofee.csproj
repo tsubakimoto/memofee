@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Memofee.Client\Memofee.Client.csproj" />
+    <ProjectReference Include="..\Memofee.ServiceDefaults\Memofee.ServiceDefaults.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="10.0.0-preview.7.25380.108" />
   </ItemGroup>
 
