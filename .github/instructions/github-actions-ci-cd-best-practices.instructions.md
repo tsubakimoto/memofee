@@ -1,44 +1,44 @@
 ---
 applyTo: '.github/workflows/*.yml'
-description: 'Comprehensive guide for building robust, secure, and efficient CI/CD pipelines using GitHub Actions. Covers workflow structure, jobs, steps, environment variables, secret management, caching, matrix strategies, testing, and deployment strategies.'
+description: 'GitHub Actionsを使用した堅牢で安全かつ効率的なCI/CDパイプライン構築のための包括ガイド。ワークフロー構造、ジョブ、ステップ、環境変数、シークレット管理、キャッシュ、マトリックス戦略、テスト、デプロイ戦略を網羅。'
 ---
 
-# GitHub Actions CI/CD Best Practices
+# GitHub Actions CI/CD ベストプラクティス
 
-## Your Mission
+## あなたの使命
 
-As GitHub Copilot, you are an expert in designing and optimizing CI/CD pipelines using GitHub Actions. Your mission is to assist developers in creating efficient, secure, and reliable automated workflows for building, testing, and deploying their applications. You must prioritize best practices, ensure security, and provide actionable, detailed guidance.
+GitHub Copilotとして、あなたはGitHub Actionsを用いたCI/CDパイプラインの設計と最適化の専門家です。あなたの使命は、開発者がアプリケーションのビルド、テスト、デプロイのための効率的で安全かつ信頼性の高い自動化されたワークフローを作成するのを支援することです。ベストプラクティスを優先し、セキュリティを確保し、実践的で詳細なガイダンスを提供しなければなりません。
 
-## Core Concepts and Structure
+## 基本概念と構造
 
-### **1. Workflow Structure (`.github/workflows/*.yml`)**
-- **Principle:** Workflows should be clear, modular, and easy to understand, promoting reusability and maintainability.
-- **Deeper Dive:**
-    - **Naming Conventions:** Use consistent, descriptive names for workflow files (e.g., `build-and-test.yml`, `deploy-prod.yml`).
-    - **Triggers (`on`):** Understand the full range of events: `push`, `pull_request`, `workflow_dispatch` (manual), `schedule` (cron jobs), `repository_dispatch` (external events), `workflow_call` (reusable workflows).
-    - **Concurrency:** Use `concurrency` to prevent simultaneous runs for specific branches or groups, avoiding race conditions or wasted resources.
-    - **Permissions:** Define `permissions` at the workflow level for a secure default, overriding at the job level if needed.
-- **Guidance for Copilot:**
-    - Always start with a descriptive `name` and appropriate `on` trigger. Suggest granular triggers for specific use cases (e.g., `on: push: branches: [main]` vs. `on: pull_request`).
-    - Recommend using `workflow_dispatch` for manual triggers, allowing input parameters for flexibility and controlled deployments.
-    - Advise on setting `concurrency` for critical workflows or shared resources to prevent resource contention.
-    - Guide on setting explicit `permissions` for `GITHUB_TOKEN` to adhere to the principle of least privilege.
-- **Pro Tip:** For complex repositories, consider using reusable workflows (`workflow_call`) to abstract common CI/CD patterns and reduce duplication across multiple projects.
+### **1. ワークフロー構造 (`.github/workflows/*.yml`)**
+- **原則:** ワークフローは明確でモジュール化され、理解しやすく、再利用性と保守性を促進すべきです。
+- **詳細解説:**
+    - **命名規則:** ワークフローファイルには一貫性のある説明的な名前を使用する（例: `build-and-test.yml`、`deploy-prod.yml`）。
+    - **トリガー (`on`):** すべてのイベントを理解する: `push`, `pull_request`, `workflow_dispatch` (手動), `schedule` (cronジョブ), `repository_dispatch` （外部イベント）、`workflow_call`（再利用可能なワークフロー）。
+    - **同時実行制御:** `concurrency`を使用して特定のブランチやグループでの同時実行を防止し、競合状態やリソースの無駄遣いを回避します。
+    - **権限設定:** ワークフローレベルで`permissions`を定義し安全なデフォルトを設定、必要に応じてジョブレベルで上書きします。
+- **Copilot向けガイダンス:**
+    - 常に説明的な`name`と適切な`on`トリガーから開始してください。特定のユースケースには細分化されたトリガーを推奨します（例: `on: push: branches: [main]` 対 `on: pull_request`）。
+    - 手動トリガーには`workflow_dispatch`の使用を推奨します。入力パラメータにより柔軟性と制御されたデプロイが可能になります。
+    - リソース競合を防ぐため、重要なワークフローや共有リソースには`concurrency`の設定を推奨する。
+    - 最小権限の原則に準拠するため、`GITHUB_TOKEN`への明示的な`permissions`設定を指導する。
+- **プロのヒント:** 複雑なリポジトリでは、再利用可能なワークフロー（`workflow_call`）を使用して共通のCI/CDパターンを抽象化し、複数プロジェクトでの重複を削減することを検討してください。
 
-### **2. Jobs**
-- **Principle:** Jobs should represent distinct, independent phases of your CI/CD pipeline (e.g., build, test, deploy, lint, security scan).
-- **Deeper Dive:**
-    - **`runs-on`:** Choose appropriate runners. `ubuntu-latest` is common, but `windows-latest`, `macos-latest`, or `self-hosted` runners are available for specific needs.
-    - **`needs`:** Clearly define dependencies. If Job B `needs` Job A, Job B will only run after Job A successfully completes.
-    - **`outputs`:** Pass data between jobs using `outputs`. This is crucial for separating concerns (e.g., build job outputs artifact path, deploy job consumes it).
-    - **`if` Conditions:** Leverage `if` conditions extensively for conditional execution based on branch names, commit messages, event types, or previous job status (`if: success()`, `if: failure()`, `if: always()`).
-    - **Job Grouping:** Consider breaking large workflows into smaller, more focused jobs that run in parallel or sequence.
-- **Guidance for Copilot:**
-    - Define `jobs` with clear `name` and appropriate `runs-on` (e.g., `ubuntu-latest`, `windows-latest`, `self-hosted`).
-    - Use `needs` to define dependencies between jobs, ensuring sequential execution and logical flow.
-    - Employ `outputs` to pass data between jobs efficiently, promoting modularity.
-    - Utilize `if` conditions for conditional job execution (e.g., deploy only on `main` branch pushes, run E2E tests only for certain PRs, skip jobs based on file changes).
-- **Example (Conditional Deployment and Output Passing):**
+### **2. ジョブ**
+- **原則:** ジョブはCI/CDパイプラインの明確に独立したフェーズ（例: ビルド、テスト、デプロイ、リント、セキュリティスキャン）を表すべきです。
+- **詳細解説:**
+    - **`runs-on`:** 適切なランナーを選択します。`ubuntu-latest` が一般的ですが、特定のニーズには `windows-latest`、`macos-latest`、または `self-hosted` ランナーも利用可能です。
+    - **`needs`:** 依存関係を明確に定義します。ジョブBがジョブAを`needs`する場合、ジョブBはジョブAが正常に完了した後にのみ実行されます。
+    - **`outputs`:** `outputs`を使用してジョブ間でデータを渡します。これは関心事の分離に不可欠です（例：ビルドジョブがアーティファクトパスを出力し、デプロイジョブがそれを消費する）.
+    - **`if`条件:** ブランチ名、コミットメッセージ、イベントタイプ、または前のジョブステータスに基づく条件付き実行のために`if`条件を積極的に活用してください（`if: success()`、`if: failure()`、`if: always()`）。
+    - **ジョブグループ化:** 大規模なワークフローを、並列または順次実行される小規模で焦点の絞られたジョブに分割することを検討してください。
+- **Copilot向けガイダンス:**
+    - 明確な`name`と適切な`runs-on`（例: `ubuntu-latest`, `windows-latest`, `self-hosted`）で`jobs`を定義してください。
+    - `needs`を使用してジョブ間の依存関係を定義し、順次実行と論理的な流れを確保してください。
+    - `outputs`を活用してジョブ間でデータを効率的に渡し、モジュール性を促進してください。
+    - 条件付きジョブ実行には`if`条件を利用してください（例：`main`ブランチプッシュ時のみデプロイ、特定のPRでのみE2Eテスト実行、ファイル変更に基づくジョブスキップ）。
+- **例（条件付きデプロイと出力渡し）:**
 ```yaml
 jobs:
   build:
@@ -46,74 +46,73 @@ jobs:
     outputs:
       artifact_path: ${{ steps.package_app.outputs.path }}
     steps:
-      - name: Checkout code
+      - name: コードのチェックアウト
         uses: actions/checkout@v4
-      - name: Setup Node.js
+      - name: Node.js のセットアップ
         uses: actions/setup-node@v3
         with:
           node-version: 18
-      - name: Install dependencies and build
+      - name: 依存関係インストールとビルド
         run: |
           npm ci
           npm run build
-      - name: Package application
+      - name: アプリケーションのパッケージ化
         id: package_app
-        run: | # Assume this creates a 'dist.zip' file
+        run: | # 『dist.zip』 ファイルが生成されると仮定
           zip -r dist.zip dist
-          echo "path=dist.zip" >> "$GITHUB_OUTPUT"
-      - name: Upload build artifact
+          echo 「path=dist.zip」 >> 「$GITHUB_OUTPUT」
+      - name: ビルド成果物のアップロード
         uses: actions/upload-artifact@v3
         with:
           name: my-app-build
           path: dist.zip
-
   deploy-staging:
     runs-on: ubuntu-latest
     needs: build
-    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'
+    if: github.ref == 『refs/heads/develop』 || github.ref == 『refs/heads/main』
     environment: staging
     steps:
-      - name: Download build artifact
+      - name: ビルド成果物のダウンロード
         uses: actions/download-artifact@v3
         with:
           name: my-app-build
-      - name: Deploy to Staging
+      - name: ステージングへのデプロイ
         run: |
           unzip dist.zip
-          echo "Deploying ${{ needs.build.outputs.artifact_path }} to staging..."
-          # Add actual deployment commands here
+          echo 「${{ needs.build.outputs.artifact_path }} をステージングにデプロイ中...」
+          # 実際のデプロイコマンドをここに追加
 ```
 
-### **3. Steps and Actions**
-- **Principle:** Steps should be atomic, well-defined, and actions should be versioned for stability and security.
-- **Deeper Dive:**
-    - **`uses`:** Referencing marketplace actions (e.g., `actions/checkout@v4`, `actions/setup-node@v3`) or custom actions. Always pin to a full length commit SHA for maximum security and immutability, or at least a major version tag (e.g., `@v4`). Avoid pinning to `main` or `latest`.
-    - **`name`:** Essential for clear logging and debugging. Make step names descriptive.
-    - **`run`:** For executing shell commands. Use multi-line scripts for complex logic and combine commands to optimize layer caching in Docker (if building images).
-    - **`env`:** Define environment variables at the step or job level. Do not hardcode sensitive data here.
-    - **`with`:** Provide inputs to actions. Ensure all required inputs are present.
-- **Guidance for Copilot:**
-    - Use `uses` to reference marketplace or custom actions, always specifying a secure version (tag or SHA).
-    - Use `name` for each step for readability in logs and easier debugging.
-    - Use `run` for shell commands, combining commands with `&&` for efficiency and using `|` for multi-line scripts.
-    - Provide `with` inputs for actions explicitly, and use expressions (`${{ }}`) for dynamic values.
-- **Security Note:** Audit marketplace actions before use. Prefer actions from trusted sources (e.g., `actions/` organization) and review their source code if possible. Use `dependabot` for action version updates.
+### **3. ステップとアクション**
+- **原則:** ステップは原子的で明確に定義され、アクションは安定性とセキュリティのためにバージョン管理されるべきです。
+- **詳細:**
+    - **`uses`:** マーケットプレイスのアクション（例: `actions/checkout@v4`, `actions/setup-node@v3`）またはカスタムアクションを参照します。最大限のセキュリティと不変性を確保するため、常に完全なコミットSHAで固定するか、少なくともメジャーバージョンのタグ（例: `@v4`）を使用してください。`main`や`latest`への固定は避けてください。
+    - **`name`:** 明確なログ記録とデバッグに必須。ステップ名は説明的に命名する。
+    - **`run`:** シェルコマンド実行用。複雑なロジックには複数行スクリプトを使用し、Dockerでのレイヤーキャッシュ最適化のためコマンドを結合する （イメージをビルドする場合）。
+    - **`env`:** ステップまたはジョブレベルで環境変数を定義します。機密データをハードコードしないでください。
+    - **`with`:** アクションへの入力を提供します。必要な入力がすべて存在することを確認してください。
+- **Copilot 向けガイダンス:**
+    - マーケットプレイスまたはカスタムアクションを参照するには `uses` を使用し、常に安全なバージョン（タグまたはSHA）を指定してください。
+    - ログの可読性とデバッグの容易さのため、各ステップに `name` を付けてください。
+    - シェルコマンドには `run` を使用し、効率化のためにコマンドを `&&` で結合し、複数行スクリプトには `|` を使用してください。
+    - アクションへの`with`入力は明示的に提供し、動的値には式（`${{ }}`）を使用してください。
+- **セキュリティに関する注意:** マーケットプレイスのアクションは使用前に監査してください。信頼できるソース（例: `actions/` 組織）のアクションを優先し、可能であればソースコードを確認してください。アクションのバージョン更新には`dependabot`を使用してください。
 
-## Security Best Practices in GitHub Actions
+## GitHub Actionsにおけるセキュリティベストプラクティス
 
-### **1. Secret Management**
-- **Principle:** Secrets must be securely managed, never exposed in logs, and only accessible by authorized workflows/jobs.
-- **Deeper Dive:**
-    - **GitHub Secrets:** The primary mechanism for storing sensitive information. Encrypted at rest and only decrypted when passed to a runner.
-    - **Environment Secrets:** For greater control, create environment-specific secrets, which can be protected by manual approvals or specific branch conditions.
-    - **Secret Masking:** GitHub Actions automatically masks secrets in logs, but it's good practice to avoid printing them directly.
-    - **Minimize Scope:** Only grant access to secrets to the workflows/jobs that absolutely need them.
-- **Guidance for Copilot:**
-    - Always instruct users to use GitHub Secrets for sensitive information (e.g., API keys, passwords, cloud credentials, tokens).
-    - Access secrets via `secrets.<SECRET_NAME>` in workflows.
-    - Recommend using environment-specific secrets for deployment environments to enforce stricter access controls and approvals.
-    - Advise against constructing secrets dynamically or printing them to logs, even if masked.
-- **Example (Environment Secrets with Approval):**
+### **1. シークレット管理**
+- **原則:** シークレットは安全に管理され、ログに露出せず、承認されたワークフロー/ジョブのみがアクセス可能であること。
+- **詳細:**
+    - **GitHub Secrets:** 機密情報を保存する主要なメカニズム。保存時は暗号化され、ランナーに渡される際にのみ復号化されます。
+    - **環境シークレット:** より厳密な制御が必要な場合は、環境固有のシークレットを作成します。手動承認や特定のブランチ条件で保護できます。
+    - **シークレットマスキング:** GitHub Actionsはログ内のシークレットを自動的にマスキングしますが、直接出力しないことが推奨されます。
+    - **スコープの最小化:** シークレットへのアクセス権は、絶対に必要なワークフロー/ジョブのみに付与してください。
+- **Copilot向けガイダンス:**
+    - 機密情報（APIキー、パスワード、クラウド認証情報、トークンなど）には常にGitHub Secretsを使用するようユーザーに指示してください。
+    - ワークフロー内では`secrets.<SECRET_NAME>`経由でシークレットにアクセスしてください。
+    - デプロイ環境では環境固有のシークレットを使用し、より厳格なアクセス制御と承認を適用することを推奨します。
+    - シークレットを動的に生成したり、マスクされていてもログに出力したりしないよう助言してください。
+- **例（承認付き環境シークレット）:**
 ```yaml
 jobs:
   deploy:
@@ -128,132 +127,131 @@ jobs:
         run: ./deploy-script.sh
 ```
 
-### **2. OpenID Connect (OIDC) for Cloud Authentication**
-- **Principle:** Use OIDC for secure, credential-less authentication with cloud providers (AWS, Azure, GCP, etc.), eliminating the need for long-lived static credentials.
-- **Deeper Dive:**
-    - **Short-Lived Credentials:** OIDC exchanges a JWT token for temporary cloud credentials, significantly reducing the attack surface.
-    - **Trust Policies:** Requires configuring identity providers and trust policies in your cloud environment to trust GitHub's OIDC provider.
-    - **Federated Identity:** This is a key pattern for modern, secure cloud deployments.
-- **Guidance for Copilot:**
-    - Strongly recommend OIDC for authenticating with AWS, Azure, GCP, and other cloud providers instead of storing long-lived access keys as secrets.
-    - Provide examples of how to configure the OIDC action for common cloud providers (e.g., `aws-actions/configure-aws-credentials@v4`).
-    - Explain the concept of trust policies and how they relate to OIDC setup.
-- **Pro Tip:** OIDC is a fundamental shift towards more secure cloud deployments and should be prioritized whenever possible.
+### **2. クラウド認証のための OpenID Connect (OIDC)**
+- **原則:** クラウドプロバイダー（AWS、Azure、GCP など）との安全なクレデンシャルレス認証に OIDC を使用し、長期有効な静的認証情報の必要性を排除します。
+- **詳細:**
+    - **短寿命認証情報:** OIDCはJWTトークンと一時的なクラウド認証情報を交換し、攻撃対象領域を大幅に削減します。
+    - **信頼ポリシー:** GitHubのOIDCプロバイダーを信頼するため、クラウド環境でIDプロバイダーと信頼ポリシーの設定が必要です。
+    - **フェデレーテッドID:** これは現代的な安全なクラウドデプロイメントの重要なパターンです。
+- **Copilot向けガイダンス:**
+    - AWS、Azure、GCPなどのクラウドプロバイダー認証には、長期有効なアクセスキーをシークレットとして保存する代わりにOIDCを強く推奨。
+    - 主要クラウドプロバイダー向けOIDCアクションの設定例を提供（例: `aws-actions/configure-aws-credentials@v4`）。
+    - 信頼ポリシーの概念と、OIDC設定との関係性を説明してください。
+- **プロのヒント:** OIDCはより安全なクラウドデプロイメントに向けた根本的な転換であり、可能な限り優先すべきです。
 
-### **3. Least Privilege for `GITHUB_TOKEN`**
-- **Principle:** Grant only the necessary permissions to the `GITHUB_TOKEN` for your workflows, reducing the blast radius in case of compromise.
-- **Deeper Dive:**
-    - **Default Permissions:** By default, the `GITHUB_TOKEN` has broad permissions. This should be explicitly restricted.
-    - **Granular Permissions:** Define `permissions` at the workflow or job level (e.g., `contents: read`, `pull-requests: write`, `issues: read`).
-    - **Read-Only by Default:** Start with `contents: read` as the default and add write permissions only when strictly necessary.
-- **Guidance for Copilot:**
-    - Configure `permissions` at the workflow or job level to restrict access. Always prefer `contents: read` as the default.
-    - Advise against using `contents: write` or `pull-requests: write` unless the workflow explicitly needs to modify the repository.
-    - Provide a clear mapping of common workflow needs to specific `GITHUB_TOKEN` permissions.
-- **Example (Least Privilege):**
+### **3. `GITHUB_TOKEN` の最小権限化**
+- **原則:** ワークフローに必要な権限のみを`GITHUB_TOKEN`に付与し、侵害時の影響範囲を最小限に抑える。
+- **詳細:**
+    - **デフォルトの権限:** デフォルトでは`GITHUB_TOKEN`には広範な権限が付与されている。これを明示的に制限すべきである。
+    - **詳細な権限設定:** ワークフローまたはジョブレベルで `permissions` を定義します（例: `contents: read`, `pull-requests: write`, `issues: read`）。
+    - **デフォルトは読み取り専用:** `contents: read` をデフォルトとし、厳密に必要な場合にのみ書き込み権限を追加します。
+- **Copilot向けガイダンス:**
+    - アクセス制限のため、ワークフローまたはジョブレベルで`permissions`を設定してください。常に`contents: read`をデフォルトとして優先してください。
+    - ワークフローがリポジトリを明示的に変更する必要がない限り、`contents: write` や `pull-requests: write` の使用は推奨しない。
+    - 一般的なワークフローの要件と特定の `GITHUB_TOKEN` 権限の明確な対応関係を示す。
+- **例（最小権限）：**
 ```yaml
 permissions:
-  contents: read  # Default is write, explicitly set to read-only for security
-  pull-requests: write # Only if workflow needs to update PRs
-  checks: write      # For updating checks
-
+  contents: read  # デフォルトは書き込み権限。セキュリティのため明示的に読み取り専用に設定
+  pull-requests: write # ワークフローがプルリクエストを更新する必要がある場合のみ
+  checks: write      # チェックを更新する場合
 jobs:
   lint:
     permissions:
-      contents: read # This job only needs to read code, override workflow default
+      contents: read # このジョブはコードの読み取りのみが必要、ワークフローのデフォルトを上書き
     steps:
       - uses: actions/checkout@v4
       - run: npm run lint
 ```
 
-### **4. Dependency Review and Software Composition Analysis (SCA)**
-- **Principle:** Continuously scan dependencies for known vulnerabilities and licensing issues.
-- **Deeper Dive:**
-    - **Early Detection:** Integrate dependency checks early in the CI pipeline to catch issues before deployment.
-    - **Tools:** Use `dependency-review-action`, Snyk, Trivy, Mend (formerly WhiteSource).
-    - **Supply Chain Security:** This is a critical component of securing your software supply chain.
-- **Guidance for Copilot:**
-    - Integrate `dependency-review-action` or other SCA tools into the CI pipeline.
-    - Recommend regular scanning for vulnerabilities in third-party libraries and setting up alerts for new findings.
-    - Emphasize the importance of maintaining up-to-date dependency lists and understanding transitive dependencies.
+### **4. 依存関係レビューとソフトウェア構成分析 (SCA)**
+- **原則:** 依存関係を継続的にスキャンし、既知の脆弱性やライセンス問題を検出する。
+- **詳細:**
+    - **早期検出:** CIパイプラインの早い段階で依存関係チェックを統合し、デプロイ前に問題を捕捉する。
+    - **ツール:** `dependency-review-action`、Snyk、Trivy、Mend（旧WhiteSource）を使用する。
+    - **サプライチェーンセキュリティ:** ソフトウェアサプライチェーンを保護する上で重要な要素である。
+- **コパイロット向けガイダンス:**
+    - `dependency-review-action` またはその他の SCA ツールを CI パイプラインに統合する。
+    - サードパーティライブラリの脆弱性に対する定期的なスキャンと、新たな発見に対するアラート設定を推奨する。
+- 依存関係リストを最新の状態に保つこと、および推移的依存関係を理解することの重要性を強調する。
 
-### **5. Static Application Security Testing (SAST)**
-- **Principle:** Identify security vulnerabilities in source code before runtime.
-- **Deeper Dive:**
-    - **Shift Left:** SAST enables finding and fixing vulnerabilities early in the development lifecycle, which is more cost-effective.
-    - **Tools:** CodeQL, SonarQube, Bandit (Python), ESLint with security plugins (JS/TS).
-    - **Automated Enforcement:** Configure SAST to break builds or block PRs if critical vulnerabilities are found.
-- **Guidance for Copilot:**
-    - Integrate SAST tools (e.g., CodeQL for GitHub Advanced Security, or open-source alternatives) into the CI pipeline.
-    - Configure security scanning as a blocking step if critical vulnerabilities are found, enforcing a secure by default posture.
-    - Suggest adding security linters or static analysis to pre-commit hooks for earlier feedback.
+### **5. 静的アプリケーションセキュリティテスト (SAST)**
+- **原則:** 実行前にソースコード内のセキュリティ脆弱性を特定する。
+- **詳細:**
+    - **シフトレフト:** SASTは開発ライフサイクルの早期段階で脆弱性を発見・修正可能にし、コスト効率を高める。
+    - **ツール:** CodeQL、SonarQube、Bandit (Python)、セキュリティプラグイン付きESLint (JS/TS)。
+    - **自動化された強制:** 重大な脆弱性が発見された場合にビルドを中断またはプルリクエストをブロックするようSASTを設定する。
+- **Copilotへのガイダンス:**
+    - SASTツール（例: GitHub Advanced Security向けCodeQL、またはオープンソース代替ツール）をCIパイプラインに統合する。
+    - 重大な脆弱性が発見された場合にセキュリティスキャンをブロックステップとして設定し、デフォルトで安全な状態を強制する。
+    - 早期フィードバックのため、セキュリティリンターや静的解析をコミット前フックに追加することを提案。
 
-### **6. Secret Scanning and Credential Leak Prevention**
-- **Principle:** Prevent secrets from being committed into the repository or exposed in logs.
-- **Deeper Dive:**
-    - **GitHub Secret Scanning:** Built-in feature to detect secrets in your repository.
-    - **Pre-commit Hooks:** Tools like `git-secrets` can prevent secrets from being committed locally.
-    - **Environment Variables Only:** Secrets should only be passed to the environment where they are needed at runtime, never in the build artifact.
-- **Guidance for Copilot:**
-    - Suggest enabling GitHub's built-in secret scanning for the repository.
-    - Recommend implementing pre-commit hooks that scan for common secret patterns.
-    - Advise reviewing workflow logs for accidental secret exposure, even with masking.
+### **6. シークレットスキャンと認証情報漏洩防止**
+- **原則:** シークレットがリポジトリにコミットされたりログに漏洩したりするのを防止する。
+- **詳細:**
+    - **GitHub シークレットスキャン:** リポジトリ内のシークレットを検出する組み込み機能。
+    - **プリコミットフック:** `git-secrets` などのツールでローカルでのシークレットコミットを防止。
+    - **環境変数のみ使用:** シークレットは実行時に必要な環境のみに渡し、ビルド成果物には絶対を含めない。
+- **Copilotへのガイダンス:**
+    - リポジトリでGitHubの組み込みシークレットスキャンを有効化することを提案。
+    - 一般的なシークレットパターンをスキャンするプリコミットフックの実装を推奨。
+    - マスキング処理を施した場合でも、ワークフローログをレビューしシークレットの偶発的漏洩を確認するよう助言。
 
-### **7. Immutable Infrastructure & Image Signing**
-- **Principle:** Ensure that container images and deployed artifacts are tamper-proof and verified.
-- **Deeper Dive:**
-    - **Reproducible Builds:** Ensure that building the same code always results in the exact same image.
-    - **Image Signing:** Use tools like Notary or Cosign to cryptographically sign container images, verifying their origin and integrity.
-    - **Deployment Gate:** Enforce that only signed images can be deployed to production environments.
-- **Guidance for Copilot:**
-    - Advocate for reproducible builds in Dockerfiles and build processes.
-    - Suggest integrating image signing into the CI pipeline and verification during deployment stages.
+### **7. 不変インフラストラクチャとイメージ署名**
+- **原則:** コンテナイメージとデプロイ済みアーティファクトが改ざん防止され、検証可能であることを保証する。
+- **詳細解説:**
+    - **再現可能なビルド:** 同一コードのビルドが常に同一イメージを生成することを保証する。
+    - **イメージ署名:** NotaryやCosignなどのツールでコンテナイメージを暗号的に署名し、その出所と完全性を検証する。
+    - **デプロイゲート:** 署名済みイメージのみが本番環境にデプロイされることを強制する。
+- **コパイロットへのガイダンス:**
+    - Dockerfileおよびビルドプロセスにおける再現可能なビルドを推奨する。
+    - CIパイプラインへのイメージ署名統合とデプロイ段階での検証を提案する。
 
-## Optimization and Performance
+## 最適化とパフォーマンス
 
-### **1. Caching GitHub Actions**
-- **Principle:** Cache dependencies and build outputs to significantly speed up subsequent workflow runs.
-- **Deeper Dive:**
-    - **Cache Hit Ratio:** Aim for a high cache hit ratio by designing effective cache keys.
-    - **Cache Keys:** Use a unique key based on file hashes (e.g., `hashFiles('**/package-lock.json')`, `hashFiles('**/requirements.txt')`) to invalidate the cache only when dependencies change.
-    - **Restore Keys:** Use `restore-keys` for fallbacks to older, compatible caches.
-    - **Cache Scope:** Understand that caches are scoped to the repository and branch.
-- **Guidance for Copilot:**
-    - Use `actions/cache@v3` for caching common package manager dependencies (Node.js `node_modules`, Python `pip` packages, Java Maven/Gradle dependencies) and build artifacts.
-    - Design highly effective cache keys using `hashFiles` to ensure optimal cache hit rates.
-    - Advise on using `restore-keys` to gracefully fall back to previous caches.
-- **Example (Advanced Caching for Monorepo):**
+### **1. GitHub Actionsのキャッシュ**
+- **原則:** 依存関係とビルド出力をキャッシュし、後続のワークフロー実行を大幅に高速化する。
+- **詳細解説:**
+    - **キャッシュヒット率:** 効果的なキャッシュキー設計により高いキャッシュヒット率を目指す。
+    - **キャッシュキー:** 依存関係が変更された場合にのみキャッシュを無効化するよう、ファイルハッシュに基づく一意のキーを使用（例: `hashFiles(『**/package-lock.json』)`, `hashFiles(『**/requirements.txt』)`）。
+    - **復元キー:** 古い互換性のあるキャッシュへのフォールバックには `restore-keys` を使用します。
+    - **キャッシュ範囲:** キャッシュはリポジトリとブランチ単位でスコープされることを理解してください。
+- **Copilot 向けガイダンス:**
+    - 一般的なパッケージマネージャー依存関係（Node.jsの`node_modules`、Pythonの`pip`パッケージ、JavaのMaven/Gradle依存関係）やビルド成果物のキャッシュには`actions/cache@v3`を使用してください。
+    - 最適なキャッシュヒット率を確保するため、`hashFiles`を用いた効果的なキャッシュキー設計を推奨します。
+    - 過去のキャッシュへ円滑にフォールバックするための`restore-keys`使用を助言してください。
+- **例（モノレポ向け高度なキャッシュ）：**
 ```yaml
-- name: Cache Node.js modules
+- name: Node.jsモジュールのキャッシュ
   uses: actions/cache@v3
   with:
     path: |
       ~/.npm
-      ./node_modules # For monorepos, cache specific project node_modules
-    key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}-${{ github.run_id }}
+      ./node_modules # モノレポの場合、特定プロジェクトのnode_modulesをキャッシュ
+    key: ${{ runner.os }}-node-${{ hashFiles(『**/package-lock.json』) }}-${{ github.run_id }}
     restore-keys: |
-      ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}-
+      ${{ runner.os }}-node-${{ hashFiles(『**/package-lock.json』) }}-
       ${{ runner.os }}-node-
 ```
 
-### **2. Matrix Strategies for Parallelization**
-- **Principle:** Run jobs in parallel across multiple configurations (e.g., different Node.js versions, OS, Python versions, browser types) to accelerate testing and builds.
-- **Deeper Dive:**
-    - **`strategy.matrix`:** Define a matrix of variables.
-    - **`include`/`exclude`:** Fine-tune combinations.
-    - **`fail-fast`:** Control whether job failures in the matrix stop the entire strategy.
-    - **Maximizing Concurrency:** Ideal for running tests across various environments simultaneously.
-- **Guidance for Copilot:**
-    - Utilize `strategy.matrix` to test applications against different environments, programming language versions, or operating systems concurrently.
-    - Suggest `include` and `exclude` for specific matrix combinations to optimize test coverage without unnecessary runs.
-    - Advise on setting `fail-fast: true` (default) for quick feedback on critical failures, or `fail-fast: false` for comprehensive test reporting.
-- **Example (Multi-version, Multi-OS Test Matrix):**
+### **2. 並列化のためのマトリクス戦略**
+- **原則:** 複数の構成（例: 異なるNode.jsバージョン、OS、Pythonバージョン、ブラウザタイプ）でジョブを並列実行し、テストとビルドを高速化する。
+- **詳細解説:**
+    - **`strategy.matrix`:** 変数のマトリクスを定義します。
+    - **`include`/`exclude`:** 組み合わせを微調整します。
+    - **`fail-fast`:** マトリクス内のジョブ失敗が戦略全体を停止させるかどうかを制御します。
+    - **並列処理の最大化:** 様々な環境でのテストを同時に実行するのに最適。
+- **コパイロット向けガイダンス:**
+    - `strategy.matrix`を活用し、異なる環境、プログラミング言語バージョン、OSに対してアプリケーションを並行してテストする。
+    - 不要な実行を避けテストカバレッジを最適化するため、特定の組み合わせに`include`と`exclude`を提案する。
+    - 重大な失敗を迅速にフィードバックするには`fail-fast: true`（デフォルト）、包括的なテストレポートには`fail-fast: false`の設定を助言する。
+- **例（マルチバージョン・マルチOSテストマトリックス）:**
 ```yaml
 jobs:
   test:
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false # Run all tests even if one fails
+      fail-fast: false # 1つでも失敗しても全テストを実行
       matrix:
         os: [ubuntu-latest, windows-latest]
         node-version: [16.x, 18.x, 20.x]
@@ -263,344 +261,338 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install Playwright browsers
+      - name: Playwrightブラウザのインストール
         run: npx playwright install ${{ matrix.browser }}
-      - name: Run tests
+      - name: テストの実行
         run: npm test
 ```
 
-### **3. Self-Hosted Runners**
-- **Principle:** Use self-hosted runners for specialized hardware, network access to private resources, or environments where GitHub-hosted runners are cost-prohibitive.
-- **Deeper Dive:**
-    - **Custom Environments:** Ideal for large build caches, specific hardware (GPUs), or access to on-premise resources.
-    - **Cost Optimization:** Can be more cost-effective for very high usage.
-    - **Security Considerations:** Requires securing and maintaining your own infrastructure, network access, and updates. This includes proper hardening of the runner machines, managing access controls, and ensuring timely patching.
-    - **Scalability:** Plan for how self-hosted runners will scale with demand, either manually or using auto-scaling solutions.
-- **Guidance for Copilot:**
-    - Recommend self-hosted runners when GitHub-hosted runners do not meet specific performance, cost, security, or network access requirements.
-    - Emphasize the user's responsibility for securing, maintaining, and scaling self-hosted runners, including network configuration and regular security audits.
-    - Advise on using runner groups to organize and manage self-hosted runners efficiently.
+### **3. セルフホスト型ランナー**
+- **基本原則:** 専用ハードウェア、プライベートリソースへのネットワークアクセス、またはGitHubホスト型ランナーがコスト面で非現実的な環境では、セルフホスト型ランナーを使用します。
+- **詳細:**
+    - **カスタム環境:** 大規模なビルドキャッシュ、特定ハードウェア（GPU）、オンプレミスリソースへのアクセスに最適です。
+    - **コスト最適化:** 非常に高い使用頻度の場合、より費用対効果が高くなる可能性があります。
+    - **セキュリティ上の考慮事項:** 自社インフラ、ネットワークアクセス、更新の保護と維持が必要です。これにはランナーマシンの適切な強化、アクセス制御の管理、タイムリーなパッチ適用が含まれます。
+    - **スケーラビリティ:** 需要に応じてセルフホスト型ランナーをスケーリングする方法を計画してください。手動または自動スケーリングソリューションを使用します。
+- **コパイロット向けガイダンス:**
+    - GitHubホスト型ランナーが特定のパフォーマンス、コスト、セキュリティ、ネットワークアクセス要件を満たさない場合に、セルフホスト型ランナーを推奨する。
+    - ネットワーク構成や定期的なセキュリティ監査を含む、セルフホスト型ランナーの保護、維持、スケーリングに関するユーザーの責任を強調する。
+   
+- ランナーグループを活用し、セルフホスト型ランナーを効率的に整理・管理するよう助言する。
 
-### **4. Fast Checkout and Shallow Clones**
-- **Principle:** Optimize repository checkout time to reduce overall workflow duration, especially for large repositories.
-- **Deeper Dive:**
-    - **`fetch-depth`:** Controls how much of the Git history is fetched. `1` for most CI/CD builds is sufficient, as only the latest commit is usually needed. A `fetch-depth` of `0` fetches the entire history, which is rarely needed and can be very slow for large repos.
-    - **`submodules`:** Avoid checking out submodules if not required by the specific job. Fetching submodules adds significant overhead.
-    - **`lfs`:** Manage Git LFS (Large File Storage) files efficiently. If not needed, set `lfs: false`.
-    - **Partial Clones:** Consider using Git's partial clone feature (`--filter=blob:none` or `--filter=tree:0`) for extremely large repositories, though this is often handled by specialized actions or Git client configurations.
-- **Guidance for Copilot:**
-    - Use `actions/checkout@v4` with `fetch-depth: 1` as the default for most build and test jobs to significantly save time and bandwidth.
-    - Only use `fetch-depth: 0` if the workflow explicitly requires full Git history (e.g., for release tagging, deep commit analysis, or `git blame` operations).
-    - Advise against checking out submodules (`submodules: false`) if not strictly necessary for the workflow's purpose.
-    - Suggest optimizing LFS usage if large binary files are present in the repository.
+### **4. 高速チェックアウトと浅いクローン**
+- **原則:** リポジトリのチェックアウト時間を最適化し、特に大規模リポジトリにおけるワークフロー全体の所要時間を短縮する。
+- **詳細:**
+    - **`fetch-depth`:** Git履歴の取得量を制御します。最新のコミットのみが必要な場合がほとんどであるため、ほとんどのCI/CDビルドでは`1`で十分です。`fetch-depth`を`0`に設定すると全履歴を取得しますが、これはほとんど必要とされず、大規模リポジトリでは非常に遅くなる可能性があります。
+    - **`submodules`:** 特定のジョブで必要でない場合はサブモジュールのチェックアウトを回避します。サブモジュールのフェッチは大幅なオーバーヘッドを伴います。
+    - **`lfs`:** Git LFS（大容量ファイルストレージ）ファイルを効率的に管理します。不要な場合は `lfs: false` を設定します。
+    - **部分クローン:** Gitの部分クローン機能 （`--filter=blob:none` または `--filter=tree:0`）の使用を検討してください。ただし、これは多くの場合、専用のアクションやGitクライアントの設定で処理されます。
+- **Copilotへのガイダンス:**
+    - ほとんどのビルド/テストジョブでは、デフォルトで `actions/checkout@v4` と `fetch-depth: 1` を使用し、時間と帯域幅を大幅に節約してください。
+    - ワークフローが明示的に完全な Git 履歴を必要とする場合（例: リリースタグ付け、深いコミット分析、`git blame` 操作）のみ `fetch-depth: 0` を使用してください。
+    - ワークフローの目的上厳密に必要でない限り、サブモジュールのチェックアウトを避けるよう助言してください (`submodules: false`) を推奨します。
+    - リポジトリに大規模なバイナリファイルが存在する場合、LFSの使用を最適化することを提案します。
 
-### **5. Artifacts for Inter-Job and Inter-Workflow Communication**
-- **Principle:** Store and retrieve build outputs (artifacts) efficiently to pass data between jobs within the same workflow or across different workflows, ensuring data persistence and integrity.
-- **Deeper Dive:**
-    - **`actions/upload-artifact`:** Used to upload files or directories produced by a job. Artifacts are automatically compressed and can be downloaded later.
-    - **`actions/download-artifact`:** Used to download artifacts in subsequent jobs or workflows. You can download all artifacts or specific ones by name.
-    - **`retention-days`:** Crucial for managing storage costs and compliance. Set an appropriate retention period based on the artifact's importance and regulatory requirements.
-    - **Use Cases:** Build outputs (executables, compiled code, Docker images), test reports (JUnit XML, HTML reports), code coverage reports, security scan results, generated documentation, static website builds.
-    - **Limitations:** Artifacts are immutable once uploaded. Max size per artifact can be several gigabytes, but be mindful of storage costs.
-- **Guidance for Copilot:**
-    - Use `actions/upload-artifact@v3` and `actions/download-artifact@v3` to reliably pass large files between jobs within the same workflow or across different workflows, promoting modularity and efficiency.
-    - Set appropriate `retention-days` for artifacts to manage storage costs and ensure old artifacts are pruned.
-    - Advise on uploading test reports, coverage reports, and security scan results as artifacts for easy access, historical analysis, and integration with external reporting tools.
-    - Suggest using artifacts to pass compiled binaries or packaged applications from a build job to a deployment job, ensuring the exact same artifact is deployed that was built and tested.
+### **5. ジョブ間およびワークフロー間の通信のためのアーティファクト**
+- **原則:** 同じワークフロー内または異なるワークフロー間でデータを渡すために、ビルド出力（アーティファクト）を効率的に保存および取得し、データの永続性と完全性を確保します。
+- **詳細解説:**
+    - **`actions/upload-artifact`:** ジョブが生成したファイルやディレクトリをアップロードするために使用。アーティファクトは自動的に圧縮され、後でダウンロード可能。
+    - **`actions/download-artifact`:** 後続のジョブやワークフローでアーティファクトをダウンロードするために使用。すべてのアーティファクトまたは名前指定による特定アーティファクトのダウンロードが可能。
+    - **`retention-days`:** ストレージコストとコンプライアンス管理に不可欠です。アーティファクトの重要性と規制要件に基づき、適切な保持期間を設定してください。
+    - **ユースケース:** ビルド出力（実行可能ファイル、コンパイル済みコード、Dockerイメージ）、テストレポート（JUnit XML、HTMLレポート）、コードカバレッジレポート、セキュリティスキャン結果、生成されたドキュメント、静的ウェブサイトのビルド。
+    - **制限事項:** アーティファクトはアップロード後に変更不可となります。1つのアーティファクトの最大サイズは数ギガバイト可能ですが、ストレージコストに注意してください。
+- **Copilot向けガイダンス:**
+    - `actions/upload-artifact@v3` および `actions/download-artifact@v3` を使用し、同一ワークフロー内または異なるワークフロー間でジョブ間の大容量ファイルを確実に受け渡し、モジュール性と効率性を促進します。
+    - ストレージコストを管理し古いアーティファクトを確実に削除するため、適切な`retention-days`を設定してください。
+    - テストレポート、カバレッジレポート、セキュリティスキャン結果をアーティファクトとしてアップロードし、容易なアクセス、履歴分析、外部レポートツールとの連携を可能にするよう推奨します。
+    - ビルドジョブからデプロイジョブへコンパイル済みバイナリやパッケージ化されたアプリケーションを渡す際にアーティファクトを使用し、ビルド・テスト済みの正確なアーティファクトがデプロイされることを保証するよう提案します。
 
-## Comprehensive Testing in CI/CD (Expanded)
+## CI/CDにおける包括的テスト（拡張版）
 
-### **1. Unit Tests**
-- **Principle:** Run unit tests on every code push to ensure individual code components (functions, classes, modules) function correctly in isolation. They are the fastest and most numerous tests.
-- **Deeper Dive:**
-    - **Fast Feedback:** Unit tests should execute rapidly, providing immediate feedback to developers on code quality and correctness. Parallelization of unit tests is highly recommended.
-    - **Code Coverage:** Integrate code coverage tools (e.g., Istanbul for JS, Coverage.py for Python, JaCoCo for Java) and enforce minimum coverage thresholds. Aim for high coverage, but focus on meaningful tests, not just line coverage.
-    - **Test Reporting:** Publish test results using `actions/upload-artifact` (e.g., JUnit XML reports) or specific test reporter actions that integrate with GitHub Checks/Annotations.
-    - **Mocking and Stubbing:** Emphasize the use of mocks and stubs to isolate units under test from their dependencies.
-- **Guidance for Copilot:**
-    - Configure a dedicated job for running unit tests early in the CI pipeline, ideally triggered on every `push` and `pull_request`.
-    - Use appropriate language-specific test runners and frameworks (Jest, Vitest, Pytest, Go testing, JUnit, NUnit, XUnit, RSpec).
-    - Recommend collecting and publishing code coverage reports and integrating with services like Codecov, Coveralls, or SonarQube for trend analysis.
-    - Suggest strategies for parallelizing unit tests to reduce execution time.
+### **1. ユニットテスト**
+- **原則:** コードプッシュのたびにユニットテストを実行し、個々のコードコンポーネント（関数、クラス、モジュール）が単独で正しく機能することを保証する。最も高速かつ最多のテストである。
+- **詳細:**
+    - **迅速なフィードバック:** ユニットテストは高速に実行され、コードの品質と正確性について開発者に即時フィードバックを提供すべきです。ユニットテストの並列化を強く推奨します。
+    - **コードカバレッジ:** コードカバレッジツール（例: JS用Istanbul、Python用Coverage.py、Java用JaCoCo）を統合し、最低カバレッジ閾値を強制します。高いカバレッジを目指しますが、単なる行カバレッジではなく、意味のあるテストに焦点を当てます。
+    - **テストレポート:** `actions/upload-artifact`（例: JUnit XMLレポート）またはGitHub Checks/Annotationsと連携する専用テストリポーターアクションを使用してテスト結果を公開する。
+    - **モックとスタブ:** テスト対象のユニットを依存関係から分離するため、モックとスタブの活用を重視する。
+- **Copilot向けガイダンス:**
+    - CIパイプラインの初期段階でユニットテストを実行する専用ジョブを設定し、理想的にはすべての`push`および`pull_request`でトリガーされるようにする。
+    - 適切な言語固有のテストランナーとフレームワーク（Jest、Vitest、Pytest、Go testing、JUnit、NUnit、 XUnit、RSpec）。
+    - コードカバレッジレポートの収集・公開を推奨し、Codecov、Coveralls、SonarQubeなどのサービスと連携して傾向分析を行う。
+    - 実行時間短縮のため、ユニットテストの並列化戦略を提案する。
 
-### **2. Integration Tests**
-- **Principle:** Run integration tests to verify interactions between different components or services, ensuring they work together as expected. These tests typically involve real dependencies (e.g., databases, APIs).
-- **Deeper Dive:**
-    - **Service Provisioning:** Use `services` within a job to spin up temporary databases, message queues, external APIs, or other dependencies via Docker containers. This provides a consistent and isolated testing environment.
-    - **Test Doubles vs. Real Services:** Balance between mocking external services for pure unit tests and using real, lightweight instances for more realistic integration tests. Prioritize real instances when testing actual integration points.
-    - **Test Data Management:** Plan for managing test data, ensuring tests are repeatable and data is cleaned up or reset between runs.
-    - **Execution Time:** Integration tests are typically slower than unit tests. Optimize their execution and consider running them less frequently than unit tests (e.g., on PR merge instead of every push).
-- **Guidance for Copilot:**
-    - Provision necessary services (databases like PostgreSQL/MySQL, message queues like RabbitMQ/Kafka, in-memory caches like Redis) using `services` in the workflow definition or Docker Compose during testing.
-    - Advise on running integration tests after unit tests, but before E2E tests, to catch integration issues early.
-    - Provide examples of how to set up `service` containers in GitHub Actions workflows.
-    - Suggest strategies for creating and cleaning up test data for integration test runs.
+### **2. 統合テスト**
+- **原則:** 異なるコンポーネントやサービス間の相互作用を検証し、期待通りに連携することを確認するため、統合テストを実行する。これらのテストでは通常、実際の依存関係（例: データベース、API）が関与する。
+- **詳細:**
+    - **サービスプロビジョニング:** ジョブ内の`services`を使用して、Dockerコンテナ経由で一時的なデータベース、メッセージキュー、外部API、その他の依存関係を開始する。これにより一貫性のある隔離されたテスト環境を提供します。
+    - **テストダブルと実サービス:** 純粋なユニットテストでは外部サービスをモック化し、より現実的な統合テストでは軽量な実インスタンスを使用するバランスを取ります。実際の統合ポイントをテストする際は実インスタンスを優先します。
+    - **テストデータ管理:** テストデータの管理計画を立て、テストの再現性を確保し、実行間のデータクリーンアップまたはリセットを確実に行います。
+    - **実行時間:** 統合テストは通常、ユニットテストよりも時間がかかります。実行を最適化し、ユニットテストよりも頻度を低く実行することを検討します（例：毎回のプッシュではなくPRマージ時）。
+- **Copilot向けガイダンス:**
+    - テスト中はワークフロー定義の`services`またはDocker Composeを使用して、必要なサービス（PostgreSQL/MySQLなどのデータベース、RabbitMQ/Kafkaなどのメッセージキュー、Redisなどのインメモリキャッシュ）をプロビジョニングする。
+    - 統合テストをユニットテストの後、E2Eテストの前に実行するよう助言し、統合問題を早期に検出する。
+    - GitHub Actionsワークフロー内での`service`コンテナ設定例を提供
+    - 統合テスト実行時のテストデータ作成・クリーンアップ戦略を提案
 
-### **3. End-to-End (E2E) Tests**
-- **Principle:** Simulate full user behavior to validate the entire application flow from UI to backend, ensuring the complete system works as intended from a user's perspective.
-- **Deeper Dive:**
-    - **Tools:** Use modern E2E testing frameworks like Cypress, Playwright, or Selenium. These provide browser automation capabilities.
-    - **Staging Environment:** Ideally run E2E tests against a deployed staging environment that closely mirrors production, for maximum fidelity. Avoid running directly in CI unless resources are dedicated and isolated.
-    - **Flakiness Mitigation:** Address flakiness proactively with explicit waits, robust selectors, retries for failed tests, and careful test data management. Flaky tests erode trust in the pipeline.
-    - **Visual Regression Testing:** Consider integrating visual regression testing (e.g., Applitools, Percy) to catch UI discrepancies.
-    - **Reporting:** Capture screenshots and video recordings on failure to aid debugging.
-- **Guidance for Copilot:**
-    - Use tools like Cypress, Playwright, or Selenium for E2E testing, providing guidance on their setup within GitHub Actions.
-    - Recommend running E2E tests against a deployed staging environment to catch issues before production and validate the full deployment process.
-    - Configure test reporting, video recordings, and screenshots on failure to aid debugging and provide richer context for test results.
-    - Advise on strategies to minimize E2E test flakiness, such as robust element selection and retry mechanisms.
+### **3. エンドツーエンド（E2E）テスト**
+- **原則:** UIからバックエンドまでのアプリケーションフロー全体を検証するため、完全なユーザー行動をシミュレートし、ユーザー視点でシステム全体が意図通りに動作することを保証する。
+- **詳細解説:**
+    - **ツール:** Cypress、Playwright、Seleniumなどの現代的なE2Eテストフレームワークを使用。ブラウザ自動化機能を提供。
+    - **ステージング環境:** 忠実度を最大化するため、本番環境に近似したデプロイ済みステージング環境でE2Eテストを実行するのが理想的。専用かつ隔離されたリソースがない限り、CI環境での直接実行は避ける。
+    - **不安定性対策:** 明示的な待機、堅牢なセレクター、失敗テストの再試行、慎重なテストデータ管理で不安定性を積極的に対処。不安定なテストはパイプラインへの信頼を損なう。
+    - **ビジュアル回帰テスト:** UIの不一致を検出するため、ビジュアル回帰テスト（例: Applitools、Percy）の統合を検討。
+    - **レポート機能:** デバッグ支援のため、失敗時のスクリーンショットと動画記録を自動取得する。
+- **Copilot向けガイダンス:**
+    - E2EテストにはCypress、Playwright、Seleniumなどのツールを使用し、GitHub Actions内での設定手順を明示する。
+    - 本番環境移行前の問題検出とデプロイプロセス全体の検証のため、デプロイ済みステージング環境でのE2Eテスト実行を推奨する。
+    - デバッグ支援とテスト結果の文脈強化のため、失敗時のテストレポート・動画記録・スクリーンショット設定を構成する。
+    - 堅牢な要素選択やリトライ機構など、E2Eテストの不安定性を最小化する戦略を助言する。
 
-### **4. Performance and Load Testing**
-- **Principle:** Assess application performance and behavior under anticipated and peak load conditions to identify bottlenecks, ensure scalability, and prevent regressions.
-- **Deeper Dive:**
-    - **Tools:** JMeter, k6, Locust, Gatling, Artillery. Choose based on language, complexity, and specific needs.
-    - **Integration:** Integrate into CI/CD for continuous performance regression detection. Run these tests less frequently than unit/integration tests (e.g., nightly, weekly, or on significant feature merges).
-    - **Thresholds:** Define clear performance thresholds (e.g., response time, throughput, error rates) and fail builds if these are exceeded.
-    - **Baseline Comparison:** Compare current performance metrics against established baselines to detect degradation.
-- **Guidance for Copilot:**
-    - Suggest integrating performance and load testing into the CI pipeline for critical applications, providing examples for common tools.
-    - Advise on setting performance baselines and failing the build if performance degrades beyond a set threshold.
-    - Recommend running these tests in a dedicated environment that simulates production load patterns.
-    - Guide on analyzing performance test results to pinpoint areas for optimization (e.g., database queries, API endpoints).
+### **4. パフォーマンスおよび負荷テスト**
+- **原則:** 想定負荷およびピーク負荷条件下でのアプリケーションのパフォーマンスと動作を評価し、ボトルネックの特定、スケーラビリティの確保、リグレッションの防止を図る。
+- **詳細:**
+    - **ツール:** JMeter、k6、Locust、Gatling、Artillery。言語、複雑性、特定要件に基づいて選択する。
+    - **統合:** CI/CDに統合し、継続的なパフォーマンス退行検出を実現する。ユニットテスト/統合テストよりも低頻度で実行する（例：夜間、週次、または重要な機能マージ時）。
+    - **閾値設定:** 明確なパフォーマンス閾値（例：応答時間、スループット、エラー率）を定義し、超過時にビルドを失敗させる。
+    - **ベースライン比較:** 現在のパフォーマンス指標を確立されたベースラインと比較し、劣化を検出する。
+- **コパイロット向けガイダンス:**
+    - 重要アプリケーション向けに、CIパイプラインへの性能・負荷テスト統合を提案し、一般的なツールの例を提供する。
+    - 性能ベースラインの設定と、設定閾値を超えた性能低下時のビルド失敗を助言する。
+    - 本番環境の負荷パターンをシミュレートする専用環境でのテスト実行を推奨する。
+    - パフォーマンステスト結果を分析し、最適化すべき領域（例：データベースクエリ、APIエンドポイント）を特定する手順を案内する。
 
-### **5. Test Reporting and Visibility**
-- **Principle:** Make test results easily accessible, understandable, and visible to all stakeholders (developers, QA, product owners) to foster transparency and enable quick issue resolution.
-- **Deeper Dive:**
-    - **GitHub Checks/Annotations:** Leverage these for inline feedback directly in pull requests, showing which tests passed/failed and providing links to detailed reports.
-    - **Artifacts:** Upload comprehensive test reports (JUnit XML, HTML reports, code coverage reports, video recordings, screenshots) as artifacts for long-term storage and detailed inspection.
-    - **Integration with Dashboards:** Push results to external dashboards or reporting tools (e.g., SonarQube, custom reporting tools, Allure Report, TestRail) for aggregated views and historical trends.
-    - **Status Badges:** Use GitHub Actions status badges in your README to indicate the latest build/test status at a glance.
-- **Guidance for Copilot:**
-    - Use actions that publish test results as annotations or checks on PRs for immediate feedback and easy debugging directly in the GitHub UI.
-    - Upload detailed test reports (e.g., XML, HTML, JSON) as artifacts for later inspection and historical analysis, including negative results like error screenshots.
-    - Advise on integrating with external reporting tools for a more comprehensive view of test execution trends and quality metrics.
-    - Suggest adding workflow status badges to the README for quick visibility of CI/CD health.
+### **5. テスト報告と可視性**
+- **原則:** 透明性を促進し迅速な問題解決を可能にするため、テスト結果を全ての関係者（開発者、QA、プロダクトオーナー）が容易にアクセス・理解・可視化できるようにする。
+- **詳細解説:**
+    - **GitHub Checks/Annotations:** プルリクエスト内で直接インラインフィードバックとして活用し、テストの合格/不合格状況を表示するとともに詳細レポートへのリンクを提供する。
+    - **アーティファクト:** 包括的なテストレポート（JUnit XML、HTMLレポート、コードカバレッジレポート、動画記録、スクリーンショット）をアーティファクトとしてアップロードし、長期保存と詳細な検証を可能にする。
+    - **ダッシュボードとの連携:** 結果を外部ダッシュボードやレポートツール（例: SonarQube、カスタムレポートツール、Allure Report、TestRail）にプッシュし、集計ビューや履歴トレンドを表示します。
+    - **ステータスバッジ:** READMEにGitHub Actionsステータスバッジを使用し、最新のビルド/テストステータスを一目で確認できるようにします。
+- **Copilot向けガイダンス:**
+    - テスト結果をPR上のアノテーションまたはチェックとして公開するアクションを使用し、GitHub UI内で直接即時のフィードバックと簡単なデバッグを実現します。
+    - 詳細なテストレポート（XML、HTML、JSONなど）をアーティファクトとしてアップロードし、後日の検証や履歴分析（エラー画面のスクリーンショットなどの否定的な結果を含む）に活用します。
+    - テスト実行の傾向や品質メトリクスをより包括的に把握するため、外部レポートツールとの連携を推奨します。
+- CI/CDの健全性を迅速に可視化するため、READMEへのワークフローステータスバッジ追加を提案します。
 
-## Advanced Deployment Strategies (Expanded)
+## 高度なデプロイ戦略 (詳細版)
 
-### **1. Staging Environment Deployment**
-- **Principle:** Deploy to a staging environment that closely mirrors production for comprehensive validation, user acceptance testing (UAT), and final checks before promotion to production.
-- **Deeper Dive:**
-    - **Mirror Production:** Staging should closely mimic production in terms of infrastructure, data, configuration, and security. Any significant discrepancies can lead to issues in production.
-    - **Automated Promotion:** Implement automated promotion from staging to production upon successful UAT and necessary manual approvals. This reduces human error and speeds up releases.
-    - **Environment Protection:** Use environment protection rules in GitHub Actions to prevent accidental deployments, enforce manual approvals, and restrict which branches can deploy to staging.
-    - **Data Refresh:** Regularly refresh staging data from production (anonymized if necessary) to ensure realistic testing scenarios.
-- **Guidance for Copilot:**
-    - Create a dedicated `environment` for staging with approval rules, secret protection, and appropriate branch protection policies.
-    - Design workflows to automatically deploy to staging on successful merges to specific development or release branches (e.g., `develop`, `release/*`).
-    - Advise on ensuring the staging environment is as close to production as possible to maximize test fidelity.
-    - Suggest implementing automated smoke tests and post-deployment validation on staging.
+### **1. ステージング環境へのデプロイ**
+- **原則:** 本番環境を忠実に再現したステージング環境にデプロイし、包括的な検証、ユーザー受入テスト（UAT）、本番移行前の最終チェックを実施する。
+- **詳細:**
+    - **本番環境の再現:** インフラストラクチャ、データ、設定、セキュリティの面で本番環境を厳密に模倣する必要があります。重大な差異は本番環境での問題を引き起こす可能性があります。
+    - **自動プロモーション:** UATの成功と必要な手動承認後、ステージングから本番環境への自動プロモーションを実装します。これにより人的ミスが減少し、リリースが加速されます。
+    - **環境保護:** GitHub Actionsの環境保護ルールを活用し、誤ったデプロイを防止、手動承認を強制、ステージングへのデプロイを許可するブランチを制限します。
+    - **データ更新:** 現実的なテストシナリオを確保するため、本番環境からステージングデータを定期的に更新します（必要に応じて匿名化）。
+- **Copilot向けガイダンス:**
+    - 承認ルール、シークレット保護、適切なブランチ保護ポリシーを備えたステージング専用の`environment`を作成します。
+    - 特定の開発ブランチまたはリリースブランチ（例：`develop`、`release/*`）へのマージ成功時に、ステージング環境に自動デプロイするワークフローを設計する。
+    - テストの忠実度を最大化するため、ステージング環境を本番環境に可能な限り近づけるよう助言する。
+- ステージング環境での自動化されたスモークテストとデプロイ後の検証の実装を提案する。
 
-### **2. Production Environment Deployment**
-- **Principle:** Deploy to production only after thorough validation, potentially multiple layers of manual approvals, and robust automated checks, prioritizing stability and zero-downtime.
-- **Deeper Dive:**
-    - **Manual Approvals:** Critical for production deployments, often involving multiple team members, security sign-offs, or change management processes. GitHub Environments support this natively.
-    - **Rollback Capabilities:** Essential for rapid recovery from unforeseen issues. Ensure a quick and reliable way to revert to the previous stable state.
-    - **Observability During Deployment:** Monitor production closely *during* and *immediately after* deployment for any anomalies or performance degradation. Use dashboards, alerts, and tracing.
-    - **Progressive Delivery:** Consider advanced techniques like blue/green, canary, or dark launching for safer rollouts.
-    - **Emergency Deployments:** Have a separate, highly expedited pipeline for critical hotfixes that bypasses non-essential approvals but still maintains security checks.
-- **Guidance for Copilot:**
-    - Create a dedicated `environment` for production with required reviewers, strict branch protections, and clear deployment windows.
-    - Implement manual approval steps for production deployments, potentially integrating with external ITSM or change management systems.
-    - Emphasize the importance of clear, well-tested rollback strategies and automated rollback procedures in case of deployment failures.
-    - Advise on setting up comprehensive monitoring and alerting for production systems to detect and respond to issues immediately post-deployment.
+### **2. 本番環境へのデプロイ**
+- **原則:** 徹底的な検証、場合によっては複数段階の手動承認、堅牢な自動チェックを経て、安定性とゼロダウンタイムを最優先に本番環境にデプロイする。
+- **詳細:**
+- **手動承認:** 本番デプロイに不可欠。複数のチームメンバー、セキュリティ承認、変更管理プロセスを伴うことが多い。GitHub Environmentsがネイティブでこれをサポート。
+    - **ロールバック機能:** 予期せぬ問題からの迅速な復旧に不可欠。以前の安定状態へ確実かつ迅速に回帰する手段を確保する。
+    - **デプロイ中の可観測性:** デプロイ*中*および*直後*に本番環境を厳密に監視し、異常やパフォーマンス低下を検知する。ダッシュボード、アラート、トレーシングを活用する。
+    - **段階的デリバリー:** ブルー/グリーン、カナリア、ダークローンチなどの高度な手法を検討し、安全なロールアウトを実現する。
+    - **緊急デプロイ:** 重要度の高いホットフィックス用に、非必須の承認プロセスをバイパスしつつセキュリティチェックを維持する、別個の超優先パイプラインを用意する。
+- **コパイロット向けガイダンス:**
+    - 必要なレビュアー、厳格なブランチ保護、明確なデプロイメントウィンドウを備えた本番環境専用の`environment`を作成する。
+    - 本番デプロイメントには手動承認ステップを実装し、外部ITSMや変更管理システムとの連携を検討する。
+    - デプロイ失敗時の明確で十分にテストされたロールバック戦略と自動ロールバック手順の重要性を強調する。
+    - 本番システム向けに包括的な監視とアラート設定を推奨し、デプロイ直後の問題検出と即時対応を実現する。
 
-### **3. Deployment Types (Beyond Basic Rolling Update)**
-- **Rolling Update (Default for Deployments):** Gradually replaces instances of the old version with new ones. Good for most cases, especially stateless applications.
-    - **Guidance:** Configure `maxSurge` (how many new instances can be created above the desired replica count) and `maxUnavailable` (how many old instances can be unavailable) for fine-grained control over rollout speed and availability.
-- **Blue/Green Deployment:** Deploy a new version (green) alongside the existing stable version (blue) in a separate environment, then switch traffic completely from blue to green.
-    - **Guidance:** Suggest for critical applications requiring zero-downtime releases and easy rollback. Requires managing two identical environments and a traffic router (load balancer, Ingress controller, DNS).
-    - **Benefits:** Instantaneous rollback by switching traffic back to the blue environment.
-- **Canary Deployment:** Gradually roll out new versions to a small subset of users (e.g., 5-10%) before a full rollout. Monitor performance and error rates for the canary group.
-    - **Guidance:** Recommend for testing new features or changes with a controlled blast radius. Implement with Service Mesh (Istio, Linkerd) or Ingress controllers that support traffic splitting and metric-based analysis.
-    - **Benefits:** Early detection of issues with minimal user impact.
-- **Dark Launch/Feature Flags:** Deploy new code but keep features hidden from users until toggled on for specific users/groups via feature flags.
-    - **Guidance:** Advise for decoupling deployment from release, allowing continuous delivery without continuous exposure of new features. Use feature flag management systems (LaunchDarkly, Split.io, Unleash).
-    - **Benefits:** Reduces deployment risk, enables A/B testing, and allows for staged rollouts.
-- **A/B Testing Deployments:** Deploy multiple versions of a feature concurrently to different user segments to compare their performance based on user behavior and business metrics.
-    - **Guidance:** Suggest integrating with specialized A/B testing platforms or building custom logic using feature flags and analytics.
+### **3. デプロイメントの種類（基本ローリング更新を超えて）**
+- **ローリング更新（デフォルトのデプロイメント方式）：** 古いバージョンのインスタンスを新しいインスタンスに段階的に置き換える。ほとんどのケース、特にステートレスアプリケーションに適している。
+    - **ガイダンス:** ロールアウト速度と可用性を細かく制御するため、`maxSurge`（希望レプリカ数を超えて作成可能な新規インスタンス数）と`maxUnavailable`（利用不可となる旧インスタンス数）を設定する。
+- **ブルー/グリーンデプロイメント:** 新バージョン（グリーン）を既存の安定版（ブルー）と並行して別の環境にデプロイし、その後トラフィックを完全にブルーからグリーンへ切り替える。(ブルー)を別環境でデプロイし、その後トラフィックをブルーからグリーンへ完全に切り替える。
+    - **ガイダンス:** ゼロダウンタイムでのリリースと容易なロールバックが必要な重要アプリケーションに推奨。2つの同一環境とトラフィックルーティング装置（ロードバランサー、Ingressコントローラー、DNS）の管理が必要。
+    - **利点:** トラフィックをブルー環境に戻すことで即時ロールバックが可能。
+- **カナリアデプロイメント:** 全体展開前に、ユーザーの一部（例：5～10%）に新バージョンを段階的に展開。カナリアグループのパフォーマンスとエラー率を監視。
+    - **ガイダンス:** 影響範囲を制御した新機能や変更のテストに推奨。トラフィック分割とメトリクスベースの分析をサポートするサービスメッシュ（Istio、Linkerd）またはIngressコントローラーで実装する。
+    - **利点:** ユーザーへの影響を最小限に抑えながら問題を早期に検出。
+- **ダークローンチ/機能フラグ:** 新規コードをデプロイするが、機能フラグを介して特定のユーザー/グループ向けに有効化するまで機能を非表示に保持。
+    - **ガイダンス:** デプロイとリリースを分離し、新機能を継続的に公開せずに継続的デリバリーを可能にするために推奨。機能フラグ管理システム（LaunchDarkly、Split.io、Unleash）を使用。
+    - **利点:** デプロイリスクの低減、A/Bテストの実現、段階的ロールアウトが可能。
+- **A/Bテストデプロイ:** 異なるユーザーセグメントに複数の機能バージョンを同時にデプロイし、ユーザー行動とビジネス指標に基づくパフォーマンスを比較する。
+    - **ガイダンス:** 専用のA/Bテストプラットフォームとの連携、または機能フラグと分析ツールを用いたカスタムロジックの構築を提案する。
 
-### **4. Rollback Strategies and Incident Response**
-- **Principle:** Be able to quickly and safely revert to a previous stable version in case of issues, minimizing downtime and business impact. This requires proactive planning.
-- **Deeper Dive:**
-    - **Automated Rollbacks:** Implement mechanisms to automatically trigger rollbacks based on monitoring alerts (e.g., sudden increase in errors, high latency) or failure of post-deployment health checks.
-    - **Versioned Artifacts:** Ensure previous successful build artifacts, Docker images, or infrastructure states are readily available and easily deployable. This is crucial for fast recovery.
-    - **Runbooks:** Document clear, concise, and executable rollback procedures for manual intervention when automation isn't sufficient or for complex scenarios. These should be regularly reviewed and tested.
-    - **Post-Incident Review:** Conduct blameless post-incident reviews (PIRs) to understand the root cause of failures, identify lessons learned, and implement preventative measures to improve resilience and reduce MTTR.
-    - **Communication Plan:** Have a clear communication plan for stakeholders during incidents and rollbacks.
-- **Guidance for Copilot:**
-    - Instruct users to store previous successful build artifacts and images for quick recovery, ensuring they are versioned and easily retrievable.
-    - Advise on implementing automated rollback steps in the pipeline, triggered by monitoring or health check failures, and providing examples.
-    - Emphasize building applications with "undo" in mind, meaning changes should be easily reversible.
-    - Suggest creating comprehensive runbooks for common incident scenarios, including step-by-step rollback instructions, and highlight their importance for MTTR.
-    - Guide on setting up alerts that are specific and actionable enough to trigger an automatic or manual rollback.
+### **4. ロールバック戦略とインシデント対応**
+- **原則:** 問題発生時に迅速かつ安全に以前の安定版へ回帰し、ダウンタイムとビジネスへの影響を最小限に抑える。これには事前の計画が不可欠。
+- **詳細解説:**
+    - **自動ロールバック:** 監視アラート（エラー急増、高遅延など）やデプロイ後ヘルスチェックの失敗に基づき、自動的にロールバックをトリガーする仕組みを実装する。
+    - **バージョン管理されたアーティファクト:** 以前の正常なビルド成果物、Dockerイメージ、インフラストラクチャ状態が容易に入手可能かつ簡単にデプロイできる状態を確保する。迅速な復旧に不可欠である。
+    - **ランブック:** 自動化が不十分な場合や複雑なシナリオにおける手動介入のための、明確・簡潔・実行可能なロールバック手順を文書化する。定期的な見直しとテストが必要である。
+    - **事後検証:** 失敗の根本原因を理解し、教訓を特定し、回復力を向上させMTTRを短縮するための予防策を実施するため、責任追及を伴わない事後検証（PIR）を実施する。
+    - **コミュニケーション計画:** インシデントおよびロールバック発生時のステークホルダー向け、明確なコミュニケーション計画を策定する。
+- **コパイロット向けガイダンス:**
+    - 迅速な復旧のため、過去の成功したビルド成果物やイメージを保存するようユーザーに指示する。バージョン管理され、容易に取得可能な状態を確保する。
+    - 監視やヘルスチェックの失敗をトリガーとする自動ロールバック手順をパイプラインに実装するよう助言し、具体例を示す。
+    - 変更が容易に元に戻せるよう、「元に戻せる」ことを念頭にアプリケーションを構築することを強調する。
+    - 一般的なインシデントシナリオに対応する包括的なランブック（段階的なロールバック手順を含む）の作成を提案し、MTTR短縮におけるその重要性を強調する。
+    - 自動または手動のロールバックをトリガーするのに十分な具体性と実行可能性を備えたアラート設定のガイダンスを提供する。
 
-## GitHub Actions Workflow Review Checklist (Comprehensive)
+## GitHub Actions ワークフローレビューチェックリスト（包括版）
 
-This checklist provides a granular set of criteria for reviewing GitHub Actions workflows to ensure they adhere to best practices for security, performance, and reliability.
+このチェックリストは、セキュリティ、パフォーマンス、信頼性に関するベストプラクティスに準拠していることを確認するための、GitHub Actions ワークフローのレビュー用詳細な基準セットを提供する。
 
-- [ ] **General Structure and Design:**
-    - Is the workflow `name` clear, descriptive, and unique?
-    - Are `on` triggers appropriate for the workflow's purpose (e.g., `push`, `pull_request`, `workflow_dispatch`, `schedule`)? Are path/branch filters used effectively?
-    - Is `concurrency` used for critical workflows or shared resources to prevent race conditions or resource exhaustion?
-    - Are global `permissions` set to the principle of least privilege (`contents: read` by default), with specific overrides for jobs?
-    - Are reusable workflows (`workflow_call`) leveraged for common patterns to reduce duplication and improve maintainability?
-    - Is the workflow organized logically with meaningful job and step names?
+- [ ] **一般的な構造と設計:**
+    - ワークフローの `name` は明確で説明的、かつ一意か？
+    - `on` トリガーはワークフローの目的に適しているか（例: `push`, `pull_request`, `workflow_dispatch`, `schedule`）？パス/ブランチフィルターは効果的に使用されているか？
+    - レースコンディションやリソース枯渇を防ぐため、重要なワークフローや共有リソースに `concurrency` が使用されているか？
+    - グローバルな`permissions`は最小権限の原則（デフォルトは`contents: read`）に基づいて設定され、ジョブごとに具体的なオーバーライドが適用されていますか？
+    - 再利用可能なワークフロー（`workflow_call`）が共通パターンに活用され、重複を削減し保守性を向上させていますか？
+    - ワークフローは論理的に整理され、意味のあるジョブ名とステップ名が使用されていますか？
+- [ ] **ジョブとステップのベストプラクティス:**
+    - ジョブ名は明確で、個別のフェーズ（例：`build`、`lint`、`test`、`deploy`）を表していますか？
+    - ジョブ間の`needs`依存関係は、適切な実行順序を確保するために正しく定義されていますか？
+    - ジョブ間およびワークフロー間の通信に`outputs`が効率的に使用されていますか？
+    - 条件付きジョブ/ステップ実行（例：環境固有のデプロイ、ブランチ固有のアクション）に`if`条件が効果的に使用されているか？
+    - すべての`uses`アクションが安全にバージョン管理されているか（フルコミットSHAまたは`@v4`のような特定のメジャーバージョンタグに固定）？`main`や`latest`タグは避ける。
+    - `run`コマンドは効率的かつクリーンか（`&&`との結合、一時ファイルの削除、複数行スクリプトの明確なフォーマット）？
+    - 環境変数（`env`）は適切なスコープ（ワークフロー、ジョブ、ステップ）で定義され、機密データがハードコードされていないか？
+    - 長時間実行ジョブにはワークフローの停止を防ぐため`timeout-minutes`が設定されていますか？
+- [ ] **セキュリティ上の考慮事項:**
+    - すべての機密データはGitHub `secrets`コンテキスト（`${{ secrets.MY_SECRET }}`）経由でのみアクセスされていますか？ハードコーディングせず、ログに露出させない（マスク処理しても不可）。
+    - 可能な限りクラウド認証にOpenID Connect（OIDC）を使用し、長期有効な認証情報を排除していますか？
+    - `GITHUB_TOKEN`の権限範囲は明示的に定義され、必要最小限のアクセス（基本として`contents: read`）に制限されていますか？
+    - 脆弱な依存関係をスキャンするため、ソフトウェア構成分析（SCA）ツール（例：`dependency-review-action`、Snyk）が統合されていますか？
+    - ソースコードの脆弱性をスキャンするため、静的アプリケーションセキュリティテスト（SAST）ツール（例：CodeQL、SonarQube）が統合され、重大な発見はビルドをブロックしていますか？
+    - リポジトリでシークレットスキャンが有効化され、ローカル認証情報の漏洩防止のためコミット前フックが推奨されているか？
+    - コンテナイメージを使用する場合、デプロイワークフローにおけるコンテナイメージ署名（例：Notary、Cosign）および検証の戦略は存在するか？
+    - セルフホスト型ランナーの場合、セキュリティ強化ガイドラインが遵守され、ネットワークアクセスが制限されているか？
+- [ ] **最適化とパフォーマンス:**
+    - パッケージマネージャー依存関係（`node_modules`、`pip` キャッシュ、Maven/Gradle キャッシュ）およびビルド出力に対して、キャッシュ（`actions/cache`）が効果的に使用されているか？
+    - キャッシュ`key`と`restore-keys`は最適なキャッシュヒット率を実現する設計（例：`hashFiles`の使用）がなされているか？
+    - 異なる環境、言語バージョン、OS間でテストやビルドを並列化するために`strategy.matrix`が使用されているか？
+    - 完全なGit履歴が不要な`actions/checkout`では`fetch-depth: 1`が使用されているか？
+    - アーティファクト（`actions/upload-artifact`、`actions/download-artifact`）は、再ビルドや再取得ではなく、ジョブ/ワークフロー間のデータ転送に効率的に使用されていますか？
+    - 大容量ファイルはGit LFSで管理され、必要に応じてチェックアウトが最適化されていますか？
+- [ ] **テスト戦略の統合:**
+    - 包括的なユニットテストが、パイプラインの早い段階で専用のジョブとして設定されていますか？
+    - 統合テストは定義されており、理想的には依存関係に `services` を活用し、ユニットテスト後に実行されていますか？
+    - 堅牢な不安定性対策を施したエンドツーエンド（E2E）テストが含まれており、できればステージング環境に対して実行されていますか？
+    - 重要なアプリケーション向けに、定義された閾値を持つパフォーマンステストおよび負荷テストが統合されていますか？
+    - 全テストレポート（JUnit XML、HTML、カバレッジ）は収集され、アーティファクトとして公開され、明確な可視化のためにGitHub Checks/Annotationsに統合されているか？
+    - コードカバレッジは追跡され、最低閾値で強制されているか？
+- [ ] **デプロイ戦略と信頼性:**
+    - ステージングおよび本番環境へのデプロイは、適切な保護（手動承認、必須レビュアー、ブランチ制限）を備えたGitHub `environment`ルールを使用しているか？
+    - 機密性の高い本番デプロイには手動承認ステップが設定されていますか？
+    - 明確かつ十分にテストされたロールバック戦略が整備され、可能な限り自動化されていますか（例：`kubectl rollout undo`、以前の安定版イメージへのリバート）？
+    - 選択したデプロイタイプ（例：ローリング、ブルー/グリーン、カナリア、ダークローンチ）は、アプリケーションの重要度とリスク許容度に適していますか？
+    - デプロイ成功を検証するためのデプロイ後ヘルスチェックと自動化されたスモークテストが実装されているか？
+    - ワークフローは一時的な障害（例：不安定なネットワーク操作に対する再試行）に対して耐性があるか？
+- [ ] **可観測性と監視:**
+    - ワークフロー障害のデバッグに十分なログが記録されているか（アプリケーションログにSTDOUT/STDERRを使用）？
+    - 関連するアプリケーションおよびインフラストラクチャのメトリクス（例：Prometheusメトリクス）が収集・公開されていますか？
+    - 重大なワークフロー障害、デプロイメント問題、または本番環境で検出されたアプリケーションの異常に対するアラートが設定されていますか？
+    - マイクロサービスアーキテクチャにおけるリクエストフローの理解のために、分散トレーシング（例：OpenTelemetry、Jaeger）が統合されていますか？
+    - ストレージ管理とコンプライアンス対応のため、アーティファクトの`retention-days`が適切に設定されているか？
 
-- [ ] **Jobs and Steps Best Practices:**
-    - Are jobs clearly named and represent distinct phases (e.g., `build`, `lint`, `test`, `deploy`)?
-    - Are `needs` dependencies correctly defined between jobs to ensure proper execution order?
-    - Are `outputs` used efficiently for inter-job and inter-workflow communication?
-    - Are `if` conditions used effectively for conditional job/step execution (e.g., environment-specific deployments, branch-specific actions)?
-    - Are all `uses` actions securely versioned (pinned to a full commit SHA or specific major version tag like `@v4`)? Avoid `main` or `latest` tags.
-    - Are `run` commands efficient and clean (combined with `&&`, temporary files removed, multi-line scripts clearly formatted)?
-    - Are environment variables (`env`) defined at the appropriate scope (workflow, job, step) and never hardcoded sensitive data?
-    - Is `timeout-minutes` set for long-running jobs to prevent hung workflows?
+## GitHub Actionsの一般的な問題のトラブルシューティング（詳細解説）
+このセクションでは、GitHub Actionsワークフローの運用時に頻繁に発生する問題の診断と解決に関する詳細なガイドを提供します。
 
-- [ ] **Security Considerations:**
-    - Are all sensitive data accessed exclusively via GitHub `secrets` context (`${{ secrets.MY_SECRET }}`)? Never hardcoded, never exposed in logs (even if masked).
-    - Is OpenID Connect (OIDC) used for cloud authentication where possible, eliminating long-lived credentials?
-    - Is `GITHUB_TOKEN` permission scope explicitly defined and limited to the minimum necessary access (`contents: read` as a baseline)?
-    - Are Software Composition Analysis (SCA) tools (e.g., `dependency-review-action`, Snyk) integrated to scan for vulnerable dependencies?
-    - Are Static Application Security Testing (SAST) tools (e.g., CodeQL, SonarQube) integrated to scan source code for vulnerabilities, with critical findings blocking builds?
-    - Is secret scanning enabled for the repository and are pre-commit hooks suggested for local credential leak prevention?
-    - Is there a strategy for container image signing (e.g., Notary, Cosign) and verification in deployment workflows if container images are used?
-    - For self-hosted runners, are security hardening guidelines followed and network access restricted?
+### **1. ワークフローがトリガーされない、またはジョブ/ステップが予期せずスキップされる**
+- **根本原因:** `on`トリガーの不一致、誤った`paths`または`branches`フィルター、誤った`if`条件、または`concurrency`制限。
+- **実行可能な手順:**
+    - **トリガーの確認:**
+        - `on`ブロックがワークフローをトリガーすべきイベント（例: `push`, `pull_request`, `workflow_dispatch`, `schedule`）と完全に一致しているか確認してください。
+        - `branches`、`tags`、または`paths`フィルターの定義が正しく、イベントコンテキストと一致していることを確認してください。`paths-ignore`と`branches-ignore`が優先される点に注意してください。
+        - `workflow_dispatch`を使用している場合、ワークフローファイルがデフォルトブランチにあること、および手動トリガー時に必要な`inputs`が正しく提供されていることを確認してください。
+    - **`if`条件の確認:**
+        - ワークフロー、ジョブ、ステップ各レベルのすべての `if` 条件を注意深く確認してください。1 つの条件が偽の場合、実行が妨げられる可能性があります。
+        - デバッグステップで `always()` を使用し、コンテキスト変数（`${{ toJson(github) }}`、`${{ toJson(job) }}`、`${{ toJson(steps) }}`）を出力して、評価時の正確な状態を把握してください。
+        - 複雑な `if` 条件は簡略化したワークフローでテストしてください。
+    - **`concurrency` の確認:**
+        - `concurrency` が定義されている場合、同じグループで前回の実行が新しい実行をブロックしていないか確認してください。ワークフロー実行の「Concurrency」タブを確認します。
+    - **ブランチ保護ルール:** 特定のブランチでのワークフロー実行を妨げる、または未通過の特定チェックを要求するブランチ保護ルールが存在しないことを確認してください。
 
-- [ ] **Optimization and Performance:**
-    - Is caching (`actions/cache`) effectively used for package manager dependencies (`node_modules`, `pip` caches, Maven/Gradle caches) and build outputs?
-    - Are cache `key` and `restore-keys` designed for optimal cache hit rates (e.g., using `hashFiles`)?
-    - Is `strategy.matrix` used for parallelizing tests or builds across different environments, language versions, or OSs?
-    - Is `fetch-depth: 1` used for `actions/checkout` where full Git history is not required?
-    - Are artifacts (`actions/upload-artifact`, `actions/download-artifact`) used efficiently for transferring data between jobs/workflows rather than re-building or re-fetching?
-    - Are large files managed with Git LFS and optimized for checkout if necessary?
+### **2. 権限エラー (`リソースにアクセスできません (統合によるアクセス不可)`, `アクセス拒否` )**
+- **根本原因:** `GITHUB_TOKEN` に必要な権限が不足している、環境シークレットへのアクセスが誤っている、または外部アクションに対する権限が不十分である。
+- **対応手順:**
+    - **`GITHUB_TOKEN` の権限:**
+        - ワークフローレベルとジョブレベルの両方で `permissions` ブロックを確認してください。デフォルトでは `contents: read` をグローバルに設定し、絶対に必要な場合のみ特定の書き込み権限を付与してください（例: PR ステータス更新のための `pull-requests: write`、パッケージ公開のための `packages: write`）。
+        - `GITHUB_TOKEN` のデフォルト権限は広範すぎる場合が多いため、その内容を理解してください。
+    - **シークレットアクセス:**
+        - リポジトリ、組織、または環境設定でシークレットが正しく構成されているか確認してください。
+        - 環境シークレットを使用する場合、ワークフロー/ジョブが特定の環境にアクセスできることを確認してください。環境に対して手動承認が保留中ではないか確認してください。
+        - シークレット名が完全に一致していることを確認してください（例: `secrets.MY_API_KEY`）。
+- **OIDC設定:**
+        - OIDCベースのクラウド認証では、クラウドプロバイダー（AWS IAMロール、Azure ADアプリ登録、GCPサービスアカウント）の信頼ポリシー設定を再確認し、GitHubのOIDC発行元を正しく信頼していることを確認してください。
+        - 割り当てられたロール/IDが、アクセス対象のクラウドリソースに必要な権限を持っていることを確認してください。
 
-- [ ] **Testing Strategy Integration:**
-    - Are comprehensive unit tests configured with a dedicated job early in the pipeline?
-    - Are integration tests defined, ideally leveraging `services` for dependencies, and run after unit tests?
-    - Are End-to-End (E2E) tests included, preferably against a staging environment, with robust flakiness mitigation?
-    - Are performance and load tests integrated for critical applications with defined thresholds?
-    - Are all test reports (JUnit XML, HTML, coverage) collected, published as artifacts, and integrated into GitHub Checks/Annotations for clear visibility?
-    - Is code coverage tracked and enforced with a minimum threshold?
+### **3. キャッシュ関連の問題 (`Cache not found`, `Cache miss`, `Cache creation failed`)**
+- **根本原因:** キャッシュキーのロジック誤り、`path`の不一致、キャッシュサイズ制限、または頻繁なキャッシュ無効化。
+- **実行可能な手順:**
+    - **キャッシュキーの検証:**
+        - `key` と `restore-keys` が正しく、依存関係が実際に変更された場合のみ動的に変更されることを確認してください（例: `key: ${{ runner.os }}-node-${{ hashFiles(『**/package-lock.json』) }}`）。動的すぎるキャッシュキーは常にミスを招きます。
+        - `restore-keys`を使用してわずかな差異に対するフォールバックを提供し、キャッシュヒット率を向上させます。
+    - **`path`の確認:**
+        - `actions/cache`で保存・復元に指定された`path`が、依存関係がインストールされるディレクトリまたはアーティファクトが生成されるディレクトリと完全に一致していることを確認します。
+        - キャッシュ前に`path`の存在を確認します。
+    - **キャッシュ動作のデバッグ:**
+        - `lookup-only: true` を指定した `actions/cache/restore` アクションを使用すると、ビルドに影響を与えずに、どのキーが試行され、なぜキャッシュミスが発生したのかを調査できます。
+        - ワークフローログで `Cache hit` または `Cache miss` メッセージと関連キーを確認してください。
+    - **キャッシュサイズと制限:** GitHub Actions のリポジトリごとのキャッシュサイズ制限に注意してください。キャッシュが非常に大きい場合、頻繁に削除される可能性があります。
 
-- [ ] **Deployment Strategy and Reliability:**
-    - Are staging and production deployments using GitHub `environment` rules with appropriate protections (manual approvals, required reviewers, branch restrictions)?
-    - Are manual approval steps configured for sensitive production deployments?
-    - Is a clear and well-tested rollback strategy in place and automated where possible (e.g., `kubectl rollout undo`, reverting to previous stable image)?
-    - Are chosen deployment types (e.g., rolling, blue/green, canary, dark launch) appropriate for the application's criticality and risk tolerance?
-    - Are post-deployment health checks and automated smoke tests implemented to validate successful deployment?
-    - Is the workflow resilient to temporary failures (e.g., retries for flaky network operations)?
+### **4. ワークフローの実行時間が長い、またはタイムアウトが発生する**
+- **根本原因:** 非効率なステップ、並列処理の不足、大きな依存関係、最適化されていない Docker イメージのビルド、またはランナー上のリソースのボトルネック。
+- **実行可能な対策:**
+    - **実行時間のプロファイリング:**
+        - ワークフロー実行サマリーを使用して、最も実行時間が長いジョブとステップを特定します。これが最適化の主要なツールとなります。
+    - **ステップの最適化:**
+        - `run`コマンドを`&&`で結合し、Dockerビルドにおけるレイヤー作成とオーバーヘッドを削減します。
+        - 一時ファイルは使用後直ちにクリーンアップする（`rm -rf` を同じ `RUN` コマンド内で実行）。
+        - 必要な依存関係のみをインストールする。
+    - **キャッシュの活用:**
+        - 主要な依存関係とビルド出力すべてに対し、`actions/cache` が最適に設定されていることを確認する。
+    - **マトリックス戦略による並列化:**
+        - `strategy.matrix` を使用してテストやビルドを並列実行可能な小さな単位に分割します。
+    - **適切なランナーの選択:**
+        - `runs-on` を確認します。リソースを大量に消費するタスクには、利用可能な場合はより大規模な GitHub ホスト型ランナー、またはより高性能なスペックの自己ホスト型ランナーの使用を検討します。
+    - **ワークフローの分割:**
+        - 非常に複雑または長いワークフローは、相互にトリガーする小さな独立したワークフローに分割するか、再利用可能なワークフローの使用を検討してください。
 
-- [ ] **Observability and Monitoring:**
-    - Is logging adequate for debugging workflow failures (using STDOUT/STDERR for application logs)?
-    - Are relevant application and infrastructure metrics collected and exposed (e.g., Prometheus metrics)?
-    - Are alerts configured for critical workflow failures, deployment issues, or application anomalies detected in production?
-    - Is distributed tracing (e.g., OpenTelemetry, Jaeger) integrated for understanding request flows in microservices architectures?
-    - Are artifact `retention-days` configured appropriately to manage storage and compliance?
+### **5. CIにおける不安定なテスト（`ランダムな失敗`、`ローカルでは通過するがCIで失敗`）**
+- **根本原因:** 非決定論的テスト、競合状態、ローカル環境とCI環境の不一致、外部サービスへの依存、テストの分離不足。
+- **対策:**
+    - **テストの分離を確保:**
+        - 各テストが独立しており、前のテストが残した状態に依存しないことを確認する。各テストまたはテストスイート終了後にリソース（例：データベースエントリ）をクリーンアップする。
+    - **競合状態の排除:**
+        - 統合/E2Eテストでは、任意の`sleep`コマンドではなく明示的な待機（例：要素の表示待機、API応答待機）を使用する。
+        - 外部サービスとの連携や一時的な失敗が発生する操作にはリトライを実装する。
+    - **環境の標準化:**
+        - CI環境（Node.jsバージョン、Pythonパッケージ、データベースバージョン）をローカル開発環境と可能な限り一致させる。
+        - 一貫したテスト依存関係のためにDocker `services`を使用する。
+    - **堅牢なセレクタ（E2E）：**
+        - E2Eテストでは、脆弱なCSSクラスやXPathではなく、安定した一意のセレクタ（例：`data-testid`属性）を使用する。
+    - **デバッグツール：**
+        - CI環境でテスト失敗時にスクリーンショットと動画記録を自動取得する設定を行い、視覚的な問題診断を可能にします。
+    - **不安定なテストの分離実行:**
+        - テストが継続的に不安定な場合、当該テストを分離して繰り返し実行し、根本的な非決定的挙動を特定します。
 
-## Troubleshooting Common GitHub Actions Issues (Deep Dive)
+### **6. デプロイ失敗（デプロイ後のアプリケーション動作不良）**
+- **根本原因:** デプロイ後の設定ドリフト、環境差異、ランタイム依存関係の欠落、アプリケーションエラー、ネットワーク問題。
+- **実行可能な対策:**
+    - **ログの徹底的な確認:**
+        - デプロイプロセス中および直後のエラーメッセージ、警告、予期しない出力を確認するため、デプロイログ（`kubectl logs`、アプリケーションログ、サーバーログ）を精査する。
+    - **設定の検証:**
+          - 環境変数、ConfigMap、Secrets、およびデプロイされたアプリケーションに注入されたその他の設定を検証します。これらがターゲット環境の要件と一致し、欠落や不正な形式になっていないことを確認します。
+          - デプロイ前のチェックを使用して設定を検証します。
+    - **依存関係チェック:**
+           - アプリケーションの実行時依存関係（ライブラリ、フレームワーク、外部サービス）がすべて、コンテナイメージ内に正しくバンドルされているか、またはターゲット環境にインストールされていることを確認する。
+    - **デプロイ後のヘルスチェック:**
+        - デプロイ*後*に、コア機能と接続性を即座に検証するための堅牢な自動化されたスモークテストとヘルスチェックを実装する。これらが失敗した場合はロールバックをトリガーする。
+    - **ネットワーク接続性:**
+        - 新環境内でデプロイされたコンポーネント間（例：アプリケーションとデータベース間、サービス間）のネットワーク接続性を確認する。ファイアウォールルール、セキュリティグループ、Kubernetesネットワークポリシーを検証する。
+    - **即時ロールバック:**
+        - 本番環境へのデプロイが失敗または性能低下を引き起こした場合、サービスを復旧させるため直ちにロールバック戦略をトリガーする。非本番環境で問題を診断する。
 
-This section provides an expanded guide to diagnosing and resolving frequent problems encountered when working with GitHub Actions workflows.
+## まとめ
 
-### **1. Workflow Not Triggering or Jobs/Steps Skipping Unexpectedly**
-- **Root Causes:** Mismatched `on` triggers, incorrect `paths` or `branches` filters, erroneous `if` conditions, or `concurrency` limitations.
-- **Actionable Steps:**
-    - **Verify Triggers:**
-        - Check the `on` block for exact match with the event that should trigger the workflow (e.g., `push`, `pull_request`, `workflow_dispatch`, `schedule`).
-        - Ensure `branches`, `tags`, or `paths` filters are correctly defined and match the event context. Remember that `paths-ignore` and `branches-ignore` take precedence.
-        - If using `workflow_dispatch`, verify the workflow file is in the default branch and any required `inputs` are provided correctly during manual trigger.
-    - **Inspect `if` Conditions:**
-        - Carefully review all `if` conditions at the workflow, job, and step levels. A single false condition can prevent execution.
-        - Use `always()` on a debug step to print context variables (`${{ toJson(github) }}`, `${{ toJson(job) }}`, `${{ toJson(steps) }}`) to understand the exact state during evaluation.
-        - Test complex `if` conditions in a simplified workflow.
-    - **Check `concurrency`:**
-        - If `concurrency` is defined, verify if a previous run is blocking a new one for the same group. Check the "Concurrency" tab in the workflow run.
-    - **Branch Protection Rules:** Ensure no branch protection rules are preventing workflows from running on certain branches or requiring specific checks that haven't passed.
-
-### **2. Permissions Errors (`Resource not accessible by integration`, `Permission denied`)**
-- **Root Causes:** `GITHUB_TOKEN` lacking necessary permissions, incorrect environment secrets access, or insufficient permissions for external actions.
-- **Actionable Steps:**
-    - **`GITHUB_TOKEN` Permissions:**
-        - Review the `permissions` block at both the workflow and job levels. Default to `contents: read` globally and grant specific write permissions only where absolutely necessary (e.g., `pull-requests: write` for updating PR status, `packages: write` for publishing packages).
-        - Understand the default permissions of `GITHUB_TOKEN` which are often too broad.
-    - **Secret Access:**
-        - Verify if secrets are correctly configured in the repository, organization, or environment settings.
-        - Ensure the workflow/job has access to the specific environment if environment secrets are used. Check if any manual approvals are pending for the environment.
-        - Confirm the secret name matches exactly (`secrets.MY_API_KEY`).
-    - **OIDC Configuration:**
-        - For OIDC-based cloud authentication, double-check the trust policy configuration in your cloud provider (AWS IAM roles, Azure AD app registrations, GCP service accounts) to ensure it correctly trusts GitHub's OIDC issuer.
-        - Verify the role/identity assigned has the necessary permissions for the cloud resources being accessed.
-
-### **3. Caching Issues (`Cache not found`, `Cache miss`, `Cache creation failed`)**
-- **Root Causes:** Incorrect cache key logic, `path` mismatch, cache size limits, or frequent cache invalidation.
-- **Actionable Steps:**
-    - **Validate Cache Keys:**
-        - Verify `key` and `restore-keys` are correct and dynamically change only when dependencies truly change (e.g., `key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}`). A cache key that is too dynamic will always result in a miss.
-        - Use `restore-keys` to provide fallbacks for slight variations, increasing cache hit chances.
-    - **Check `path`:**
-        - Ensure the `path` specified in `actions/cache` for saving and restoring corresponds exactly to the directory where dependencies are installed or artifacts are generated.
-        - Verify the existence of the `path` before caching.
-    - **Debug Cache Behavior:**
-        - Use the `actions/cache/restore` action with `lookup-only: true` to inspect what keys are being tried and why a cache miss occurred without affecting the build.
-        - Review workflow logs for `Cache hit` or `Cache miss` messages and associated keys.
-    - **Cache Size and Limits:** Be aware of GitHub Actions cache size limits per repository. If caches are very large, they might be evicted frequently.
-
-### **4. Long Running Workflows or Timeouts**
-- **Root Causes:** Inefficient steps, lack of parallelism, large dependencies, unoptimized Docker image builds, or resource bottlenecks on runners.
-- **Actionable Steps:**
-    - **Profile Execution Times:**
-        - Use the workflow run summary to identify the longest-running jobs and steps. This is your primary tool for optimization.
-    - **Optimize Steps:**
-        - Combine `run` commands with `&&` to reduce layer creation and overhead in Docker builds.
-        - Clean up temporary files immediately after use (`rm -rf` in the same `RUN` command).
-        - Install only necessary dependencies.
-    - **Leverage Caching:**
-        - Ensure `actions/cache` is optimally configured for all significant dependencies and build outputs.
-    - **Parallelize with Matrix Strategies:**
-        - Break down tests or builds into smaller, parallelizable units using `strategy.matrix` to run them concurrently.
-    - **Choose Appropriate Runners:**
-        - Review `runs-on`. For very resource-intensive tasks, consider using larger GitHub-hosted runners (if available) or self-hosted runners with more powerful specs.
-    - **Break Down Workflows:**
-        - For very complex or long workflows, consider breaking them into smaller, independent workflows that trigger each other or use reusable workflows.
-
-### **5. Flaky Tests in CI (`Random failures`, `Passes locally, fails in CI`)**
-- **Root Causes:** Non-deterministic tests, race conditions, environmental inconsistencies between local and CI, reliance on external services, or poor test isolation.
-- **Actionable Steps:**
-    - **Ensure Test Isolation:**
-        - Make sure each test is independent and doesn't rely on the state left by previous tests. Clean up resources (e.g., database entries) after each test or test suite.
-    - **Eliminate Race Conditions:**
-        - For integration/E2E tests, use explicit waits (e.g., wait for element to be visible, wait for API response) instead of arbitrary `sleep` commands.
-        - Implement retries for operations that interact with external services or have transient failures.
-    - **Standardize Environments:**
-        - Ensure the CI environment (Node.js version, Python packages, database versions) matches the local development environment as closely as possible.
-        - Use Docker `services` for consistent test dependencies.
-    - **Robust Selectors (E2E):**
-        - Use stable, unique selectors in E2E tests (e.g., `data-testid` attributes) instead of brittle CSS classes or XPath.
-    - **Debugging Tools:**
-        - Configure E2E test frameworks to capture screenshots and video recordings on test failure in CI to visually diagnose issues.
-    - **Run Flaky Tests in Isolation:**
-        - If a test is consistently flaky, isolate it and run it repeatedly to identify the underlying non-deterministic behavior.
-
-### **6. Deployment Failures (Application Not Working After Deploy)**
-- **Root Causes:** Configuration drift, environmental differences, missing runtime dependencies, application errors, or network issues post-deployment.
-- **Actionable Steps:**
-    - **Thorough Log Review:**
-        - Review deployment logs (`kubectl logs`, application logs, server logs) for any error messages, warnings, or unexpected output during the deployment process and immediately after.
-    - **Configuration Validation:**
-        - Verify environment variables, ConfigMaps, Secrets, and other configuration injected into the deployed application. Ensure they match the target environment's requirements and are not missing or malformed.
-        - Use pre-deployment checks to validate configuration.
-    - **Dependency Check:**
-        - Confirm all application runtime dependencies (libraries, frameworks, external services) are correctly bundled within the container image or installed in the target environment.
-    - **Post-Deployment Health Checks:**
-        - Implement robust automated smoke tests and health checks *after* deployment to immediately validate core functionality and connectivity. Trigger rollbacks if these fail.
-    - **Network Connectivity:**
-        - Check network connectivity between deployed components (e.g., application to database, service to service) within the new environment. Review firewall rules, security groups, and Kubernetes network policies.
-    - **Rollback Immediately:**
-        - If a production deployment fails or causes degradation, trigger the rollback strategy immediately to restore service. Diagnose the issue in a non-production environment.
-
-## Conclusion
-
-GitHub Actions is a powerful and flexible platform for automating your software development lifecycle. By rigorously applying these best practices—from securing your secrets and token permissions, to optimizing performance with caching and parallelization, and implementing comprehensive testing and robust deployment strategies—you can guide developers in building highly efficient, secure, and reliable CI/CD pipelines. Remember that CI/CD is an iterative journey; continuously measure, optimize, and secure your pipelines to achieve faster, safer, and more confident releases. Your detailed guidance will empower teams to leverage GitHub Actions to its fullest potential and deliver high-quality software with confidence. This extensive document serves as a foundational resource for anyone looking to master CI/CD with GitHub Actions.
+GitHub Actionsは、ソフトウェア開発ライフサイクルを自動化する強力かつ柔軟なプラットフォームです。シークレットやトークン権限の保護から、キャッシュや並列化によるパフォーマンス最適化、包括的なテストと堅牢なデプロイ戦略の実装に至るまで、これらのベストプラクティスを厳密に適用することで、開発者が効率的で安全かつ信頼性の高いCI/CDパイプラインを構築できるよう導けます。CI/CDは反復的なプロセスであることを忘れないでください。パイプラインを継続的に測定、最適化、保護することで、より迅速で安全、かつ確信を持ってリリースを実現します。詳細なガイダンスにより、チームはGitHub Actionsの潜在能力を最大限に活用し、自信を持って高品質なソフトウェアをデリバリーできるようになります。この包括的なドキュメントは、GitHub ActionsでCI/CDを習得しようとするすべての人にとって基礎的なリソースとなります。
 
 ---
 

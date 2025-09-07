@@ -3,52 +3,53 @@ description: 'Infrastructure as Code with Bicep'
 applyTo: '**/*.bicep'
 ---
 
-## Naming Conventions
+## 命名規則
 
--   When writing Bicep code, use lowerCamelCase for all names (variables, parameters, resources)
--   Use resource type descriptive symbolic names (e.g., 'storageAccount' not 'storageAccountName')
--   Avoid using 'name' in a symbolic name as it represents the resource, not the resource's name
--   Avoid distinguishing variables and parameters by the use of suffixes
+-   Bicep コードを記述する際は、すべての名前（変数、パラメーター、リソース）に lowerCamelCase を使用してください
+-   リソースタイプは説明的な記号名を使用（例: 『storageAccount』 → 『storageAccountName』 は不可）
+-   記号名に 『name』 を含めない（リソース自体を表すため、リソース名ではない）
+-   接尾辞による変数とパラメータの区別を避ける
 
-## Structure and Declaration
+## 構造と宣言
 
--   Always declare parameters at the top of files with @description decorators
--   Use latest stable API versions for all resources
--   Use descriptive @description decorators for all parameters
--   Specify minimum and maximum character length for naming parameters
+-   パラメータは常にファイルの先頭で @description デコレータ付きで宣言する
+-   全リソースで最新の安定版 API バージョンを使用する
+-   全パラメータに説明的な @description デコレータを付ける
+-   パラメータ命名には最小・最大文字数を指定する
 
-## Parameters
+## パラメータ
 
--   Set default values that are safe for test environments (use low-cost pricing tiers)
--   Use @allowed decorator sparingly to avoid blocking valid deployments
--   Use parameters for settings that change between deployments
+-   テスト環境に安全なデフォルト値を設定する（低コストの料金プランを使用）
+-   有効なデプロイを妨げないよう、@allowed デコレータは控えめに使用
+-   デプロイ間で変更される設定にはパラメータを使用
 
-## Variables
+## 変数
 
--   Variables automatically infer type from the resolved value
--   Use variables to contain complex expressions instead of embedding them directly in resource properties
+-   変数は解決された値から型を自動的に推測
+-   リソースプロパティに直接埋め込む代わりに、複雑な式を格納するために変数を使用
 
-## Resource References
+## リソース参照
 
--   Use symbolic names for resource references instead of reference() or resourceId() functions
--   Create resource dependencies through symbolic names (resourceA.id) not explicit dependsOn
--   For accessing properties from other resources, use the 'existing' keyword instead of passing values through outputs
+-   reference() や resourceId() 関数ではなく、シンボリック名でリソースを参照
+-   リソース依存関係は明示的な dependsOn ではなくシンボリック名（resourceA.id）で作成
+-   他リソースのプロパティにアクセスする際は、出力経由で値を渡す代わりに 『existing』 キーワードを使用
 
-## Resource Names
+## リソース名
 
--   Use template expressions with uniqueString() to create meaningful and unique resource names
--   Add prefixes to uniqueString() results since some resources don't allow names starting with numbers
+-   意味のある一意なリソース名を作成するため、uniqueString() を含むテンプレート式を使用
+-   一部リソースでは数字で始まる名前が許可されないため、uniqueString() の結果にプレフィックスを追加
 
-## Child Resources
+## 子リソース
 
--   Avoid excessive nesting of child resources
--   Use parent property or nesting instead of constructing resource names for child resources
+-   子リソースの過度なネストを避ける
+-   子リソースの名前を構築する代わりに、parentプロパティまたはネストを使用する
 
-## Security
+## セキュリティ
 
--   Never include secrets or keys in outputs
--   Use resource properties directly in outputs (e.g., storageAccount.properties.primaryEndpoints)
+-   出力にシークレットやキーを含めない
+-   出力ではリソースのプロパティを直接使用する（例: storageAccount.properties.primaryEndpoints）
 
-## Documentation
+## ドキュメント
 
--   Include helpful // comments within your Bicep files to improve readability
+-   読みやすさを向上させるため、Bicepファイル内に有用な//コメントを含める
+

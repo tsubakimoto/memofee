@@ -3,50 +3,50 @@ description: 'Documentation and content creation standards'
 applyTo: '**/*.md'
 ---
 
-## Markdown Content Rules
+## マークダウンコンテンツのルール
 
-The following markdown content rules are enforced in the validators:
+以下のマークダウンコンテンツのルールがバリデータで適用されます:
 
-1. **Headings**: Use appropriate heading levels (H2, H3, etc.) to structure your content. Do not use an H1 heading, as this will be generated based on the title.
-2. **Lists**: Use bullet points or numbered lists for lists. Ensure proper indentation and spacing.
-3. **Code Blocks**: Use fenced code blocks for code snippets. Specify the language for syntax highlighting.
-4. **Links**: Use proper markdown syntax for links. Ensure that links are valid and accessible.
-5. **Images**: Use proper markdown syntax for images. Include alt text for accessibility.
-6. **Tables**: Use markdown tables for tabular data. Ensure proper formatting and alignment.
-7. **Line Length**: Limit line length to 400 characters for readability.
-8. **Whitespace**: Use appropriate whitespace to separate sections and improve readability.
-9. **Front Matter**: Include YAML front matter at the beginning of the file with required metadata fields.
+1. **見出し**: 適切な見出しレベル (H2、H3 など) を使用してコンテンツを構成してください。H1 見出しは使用しないでください。これはタイトルに基づいて生成されます。
+2. **リスト**: リストには箇条書きまたは番号付きリストを使用してください。適切なインデントとスペースを確保してください。
+3. **コードブロック**: コードスニペットにはフェンストコードブロックを使用してください。構文ハイライト用に言語を指定してください。
+4. **リンク**: リンクには適切なマークダウン構文を使用してください。リンクが有効でアクセス可能であることを確認してください。
+5. **画像**: 画像には適切なマークダウン構文を使用してください。アクセシビリティのために代替テキストを含めてください。
+6. **表**: 表形式のデータにはマークダウン表を使用してください。適切な書式設定と配置を確認してください。
+7. **行の長さ**: 読みやすさのため、行の長さを400文字以内に制限してください。
+8. **空白**: セクションを区切り、読みやすさを向上させるために適切な空白を使用してください。
+9. **フロントマター**: ファイルの先頭に、必要なメタデータフィールドを含むYAMLフロントマターを含めてください。
 
-## Formatting and Structure
+## フォーマットと構造
 
-Follow these guidelines for formatting and structuring your markdown content:
+マークダウンコンテンツのフォーマットと構造化には以下のガイドラインに従ってください：
 
-- **Headings**: Use `##` for H2 and `###` for H3. Ensure that headings are used in a hierarchical manner. Recommend restructuring if content includes H4, and more strongly recommend for H5.
-- **Lists**: Use `-` for bullet points and `1.` for numbered lists. Indent nested lists with two spaces.
-- **Code Blocks**: Use triple backticks (`) to create fenced code blocks. Specify the language after the opening backticks for syntax highlighting (e.g., `csharp).
-- **Links**: Use `[link text](URL)` for links. Ensure that the link text is descriptive and the URL is valid.
-- **Images**: Use `![alt text](image URL)` for images. Include a brief description of the image in the alt text.
-- **Tables**: Use `|` to create tables. Ensure that columns are properly aligned and headers are included.
-- **Line Length**: Break lines at 80 characters to improve readability. Use soft line breaks for long paragraphs.
-- **Whitespace**: Use blank lines to separate sections and improve readability. Avoid excessive whitespace.
+- **見出し:** H2には`##`、H3には`###`を使用。見出しは階層的に使用すること。H4を含む場合は再構成を推奨、H5の場合は強く推奨。
+- **リスト**: 箇条書きには `-`、番号付きリストには `1.` を使用します。ネストしたリストは2スペースでインデントします。
+- **コードブロック**: 囲みコードブロックを作成するには三重バックティック (`) を使用します。構文ハイライトのため、開始バックティックの後に言語を指定します（例: `csharp`）。
+- **リンク**: リンクは `[リンクテキスト](URL)` で記述してください。リンクテキストは説明的で、URLは有効であることを確認してください。
+- **画像**: 画像は `![代替テキスト](画像URL)` で記述してください。代替テキストには画像の簡単な説明を含めてください。
+- **表**: 表は `|` で作成してください。列が適切に揃えられ、ヘッダーが含まれていることを確認してください。
+- **行の長さ**: 読みやすさを向上させるため、80文字で行を折り返してください。長い段落にはソフト改行を使用してください。
+- **空白**: セクションの区切りや読みやすさの向上には空白行を使用してください。過剰な空白は避けてください。
 
-## Validation Requirements
+## 検証要件
 
-Ensure compliance with the following validation requirements:
+以下の検証要件への準拠を確認してください:
 
-- **Front Matter**: Include the following fields in the YAML front matter:
+- **フロントマター**: YAMLフロントマターに以下のフィールドを含めること:
 
-  - `post_title`: The title of the post.
-  - `author1`: The primary author of the post.
-  - `post_slug`: The URL slug for the post.
-  - `microsoft_alias`: The Microsoft alias of the author.
-  - `featured_image`: The URL of the featured image.
-  - `categories`: The categories for the post. These categories must be from the list in /categories.txt.
-  - `tags`: The tags for the post.
-  - `ai_note`: Indicate if AI was used in the creation of the post.
-  - `summary`: A brief summary of the post. Recommend a summary based on the content when possible.
-  - `post_date`: The publication date of the post.
+  - `post_title`: 投稿のタイトル。
+  - `author1`: 投稿の主要な著者。
+  - `post_slug`: 投稿のURLスラッグ。
+  - `microsoft_alias`: 著者のMicrosoftエイリアス。
+  - `featured_image`: 注目画像のURL。
+  - `categories`: 投稿のカテゴリ。カテゴリは /categories.txt のリストから選択する必要があります。
+  - `tags`: 投稿のタグ。
+  - `ai_note`: 投稿の作成に AI が使用されたかどうかを明記します。
+  - `summary`: 投稿の簡単な要約。可能な場合は、内容に基づいた要約を推奨します。
+  - `post_date`: 投稿の公開日。
 
-- **Content Rules**: Ensure that the content follows the markdown content rules specified above.
-- **Formatting**: Ensure that the content is properly formatted and structured according to the guidelines.
-- **Validation**: Run the validation tools to check for compliance with the rules and guidelines.
+- **コンテンツ規則**: コンテンツが上記のマークダウン規則に従っていることを確認する。
+- **書式設定**: コンテンツがガイドラインに従って適切に書式設定され構造化されていることを確認する。
+- **検証**: 検証ツールを実行し、規則とガイドラインへの準拠を確認する。

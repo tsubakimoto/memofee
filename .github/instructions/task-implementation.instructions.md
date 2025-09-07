@@ -3,188 +3,183 @@ applyTo: '**/.copilot-tracking/changes/*.md'
 description: 'Instructions for implementing task plans with progressive tracking and change record - Brought to you by microsoft/edge-ai'
 ---
 
-# Task Plan Implementation Instructions
+# タスク計画の実装手順
 
-You will implement your specific task plan located in `.copilot-tracking/plans/**` and `.copilot-tracking/details/**`. Your goal is to progressively and completely implement each step in the plan files to create high-quality, working software that meets all specified requirements.
+`.copilot-tracking/plans/**` および `.copilot-tracking/details/**` に配置された固有のタスク計画を実装します。目標は、計画ファイルの各ステップを段階的かつ完全に実装し、すべての指定要件を満たす高品質で動作するソフトウェアを作成することです。
 
-Implementation progress MUST be tracked in a corresponding changes files located in `.copilot-tracking/changes/**`.
+実装の進捗は、`.copilot-tracking/changes/**` にある対応する変更ファイルで必ず追跡してください。
 
-## Core Implementation Process
+## 核心的な実装プロセス
 
-### 1. Plan Analysis and Preparation
+### 1. 計画の分析と準備
 
-**MUST complete before starting implementation:**
-- **MANDATORY**: Read and fully understand the complete plan file including scope, objectives, all phases, and every checklist item
-- **MANDATORY**: Read and fully understand the corresponding changes file completely - if any parts are missing from context, read the entire file back in using `read_file`
-- **MANDATORY**: Identify all referenced files mentioned in the plan and examine them for context
-- **MANDATORY**: Understand current project structure and conventions
+**実装開始前に必ず完了すること:**
+- **必須**: 計画ファイル全体（範囲、目的、全フェーズ、チェックリスト項目を含む）を読み、完全に理解する
+- **必須**: 対応する変更ファイルを完全に読み込み、完全に理解する - コンテキストの一部が欠落している場合は、`read_file`を使用してファイル全体を読み直す
+- **必須**: 計画で言及されているすべての参照ファイルを特定し、コンテキストを確認する
+- **必須**: 現在のプロジェクト構造と規約を理解する
 
-### 2. Systematic Implementation Process
+### 2. 体系的な実装プロセス
 
-**Implement each task in the plan systematically:**
+**計画の各タスクを体系的に実装する:**
 
-1. **Process tasks in order** - Follow the plan sequence exactly, one task at a time
-2. **MANDATORY before implementing any task:**
-   - **ALWAYS ensure implementation is associated with a specific task from the plan**
-   - **ALWAYS read the entire details section for that task from the associated details markdown file in `.copilot-tracking/details/**`**
-   - **FULLY understand all implementation details before proceeding**
-   - Gather any additional required context as needed
+1. **タスクを順番に処理する** - 計画の順序を厳密に守り、1回に1タスクずつ
+2. **タスク実装前の必須事項:**
+   - **実装が計画の特定タスクに関連付けられていることを常に確認する**
+   - **関連する詳細マークダウンファイル（`.copilot-tracking/details/`内）から、そのタスクの詳細セクション全体を必ず読む**
+   - **進める前に実装の詳細を完全に理解すること**
+   - 必要に応じて追加のコンテキストを収集する
+3. **動作するコードでタスクを完全に実装する：**
+   - ワークスペースの既存のコードパターンと規約に従う
+   - 詳細で指定されたすべてのタスク要件を満たす動作する機能を作成する
+   - 適切なエラー処理、ドキュメントを含め、ベストプラクティスに従う
+4. **タスク完了のマークと変更追跡の更新:**
+   - 計画ファイルを更新: 完了したタスクの `[ ]` を `[x]` に変更
+   - **すべてのタスク完了後の必須事項**: 変更ファイルを更新し、適切な「追加」「変更」「削除」セクションに相対ファイルパスと実装内容の要約文を追加
+   - **必須事項**: タスク計画と詳細から変更がある場合、関連セクション内で計画外の変更であることを明記し、具体的な理由を記載
+   - フェーズ内の全タスクが完了（`[x]`）の場合、フェーズヘッダーを完了（`[x]`）とマーク
 
-3. **Implement the task completely with working code:**
-   - Follow existing code patterns and conventions from the workspace
-   - Create working functionality that meets all task requirements specified in the details
-   - Include proper error handling, documentation, and follow best practices
+### 3. 実装品質基準
 
-4. **Mark task complete and update changes tracking:**
-   - Update plan file: change `[ ]` to `[x]` for completed task
-   - **MANDATORY after completing EVERY task**: Update the changes file by appending to the appropriate Added, Modified, or Removed sections with relative file paths and one-sentence summary of what was implemented
-   - **MANDATORY**: If any changes diverge from the task plan and details, specifically call out within the relevant section that the change was made outside of the plan and include the specific reason
-   - If ALL tasks in a phase are complete `[x]`, mark the phase header as complete `[x]`
+**全ての実装は以下を満たすこと:**
+- 既存のワークスペースのパターンと規約に従うこと（標準は `copilot/` フォルダを参照）
+- すべてのタスク要件を満たす完全かつ動作する機能を実装すること
+- 適切なエラー処理とバリデーションを含めること
+- ワークスペースと一貫した命名規則とコード構造を使用すること
+- 複雑なロジックには必要なドキュメントとコメントを追加すること
+- 既存システムおよび依存関係との互換性を確保すること
 
-### 3. Implementation Quality Standards
+### 4. 継続的な進捗と検証
 
-**Every implementation MUST:**
-- Follow existing workspace patterns and conventions (check `copilot/` folder for standards)
-- Implement complete, working functionality that meets all task requirements
-- Include appropriate error handling and validation
-- Use consistent naming conventions and code structure from the workspace
-- Add necessary documentation and comments for complex logic
-- Ensure compatibility with existing systems and dependencies
+**各タスク実装後：**
+1. 詳細ファイルのタスク要件に対して変更内容を検証する
+2. 次のタスクに進む前に問題を修正する
+3. **必須**: 完了したタスクを `[x]` でマークするよう計画ファイルを更新する
+4. **各タスク完了後必ず実施**: 変更ファイルを更新し、追加/変更/削除セクションに相対ファイルパスと実装内容の要約文を追加する
+5. 次に未チェックのタスクへ進む
 
-### 4. Continuous Progress and Validation
+**以下の条件が満たされるまで継続:**
+- 計画内の全タスクが完了マーク `[x]` となる
+- 指定された全ファイルが作成または動作するコードで更新される
+- 計画の全成功基準が検証される
 
-**After implementing each task:**
-1. Validate the changes made against the task requirements from the details file
-2. Fix any problems before moving to the next task
-3. **MANDATORY**: Update the plan file to mark completed tasks `[x]`
-4. **MANDATORY after EVERY task completion**: Update the changes file by appending to Added, Modified, or Removed sections with relative file paths and one-sentence summary of what was implemented
-5. Continue to the next unchecked task
+### 5. 参照収集ガイドライン
 
-**Continue until:**
-- All tasks in the plan are marked complete `[x]`
-- All specified files have been created or updated with working code
-- All success criteria from the plan have been verified
+**外部参照を収集する際:**
+- 理論的なドキュメントより実践的な実装例に焦点を当てる
+- 外部ソースに実際に使用可能なパターンが含まれていることを検証する
+- 外部パターンをワークスペースの規約や標準に合わせて適応させる
 
-### 5. Reference Gathering Guidelines
+**参照元からの実装時：**
+- まずワークスペースのパターンと規約に従い、次に外部パターンを適用する
+- 単なる例ではなく、完全かつ動作する機能を実装する
+- すべての依存関係と設定が適切に統合されていることを確認する
+- 実装が既存のプロジェクト構造内で動作することを確認する
 
-**When gathering external references:**
-- Focus on practical implementation examples over theoretical documentation
-- Validate that external sources contain actual usable patterns
-- Adapt external patterns to match workspace conventions and standards
+### 6. 完了とドキュメント化
 
-**When implementing from references:**
-- Follow workspace patterns and conventions first, external patterns second
-- Implement complete, working functionality rather than just examples
-- Ensure all dependencies and configurations are properly integrated
-- Ensure implementations work within the existing project structure
+**実装完了の条件：**
+- 計画タスク全てが完了マーク `[x]` 付き
+- 指定ファイル全てが動作コードと共に存在
+- 計画の全成功基準が検証済み
+- 実装エラーが完全に解消
 
-### 6. Completion and Documentation
+**最終ステップ - 変更ファイルにリリース概要を追加：**
+- 全フェーズが完了マーク `[x]` 付き後にのみ「リリース概要」セクションを追加
+- リリース文書用に完全なファイル一覧と全体的な実装概要を文書化する
 
-**Implementation is complete when:**
-- All plan tasks are marked complete `[x]`
-- All specified files exist with working code
-- All success criteria from the plan are verified
-- No implementation errors remain
+### 7. 問題解決
 
-**Final step - update changes file with release summary:**
-- Add Release Summary section only after ALL phases are marked complete `[x]`
-- Document complete file inventory and overall implementation summary for release documentation
+**実装上の問題が発生した場合：**
+- 具体的な問題を明確に文書化する
+- 代替アプローチや検索用語を試す
+- 外部参照が失敗した場合はワークスペースパターンを代替手段として使用する
+- 完全に停止せず、利用可能な情報で継続する
+- 未解決の問題は将来参照のため計画ファイルに記録する
 
-### 7. Problem Resolution
-
-**When encountering implementation issues:**
-- Document the specific problem clearly
-- Try alternative approaches or search terms
-- Use workspace patterns as fallback when external references fail
-- Continue with available information rather than stopping completely
-- Note any unresolved issues in the plan file for future reference
-
-## Implementation Workflow
-
+## 実装ワークフロー
 ```
-1. Read and fully understand plan file and all checklists completely
-2. Read and fully understand changes file completely (re-read entire file if missing context)
-3. For each unchecked task:
-   a. Read entire details section for that task from details markdown file
-   b. Fully understand all implementation requirements
-   c. Implement task with working code following workspace patterns
-   d. Validate implementation meets task requirements
-   e. Mark task complete [x] in plan file
-   f. Update changes file with Added, Modified, or Removed entries
-   g. Call out any divergences from plan/details within relevant sections with specific reasons
-4. Repeat until all tasks complete
-5. Only after ALL phases are complete [x]: Add final Release Summary to changes file
+1. 計画ファイルと全チェックリストを完全に読み込み理解する
+2. 変更ファイルを完全に読み込み理解する（文脈が不足している場合はファイル全体を再読する）
+3. 未チェックの各タスクについて：
+   a. 詳細マークダウンファイルから該当タスクの詳細セクション全体を読む
+   b. 実装要件を完全に理解する
+   c. ワークスペースパターンに従い動作するコードでタスクを実装する
+   d. 実装がタスク要件を満たすことを検証する
+   e. 計画ファイルでタスクを完了済み[x]とマーク
+   f. 変更ファイルに「追加」「修正」「削除」のエントリを更新
+   g. 計画/詳細との相違点を該当セクションに具体的な理由と共に明記
+4. 全タスク完了まで繰り返す
+5. 全フェーズ完了後[x]のみ：変更ファイルに最終リリースサマリーを追加
 ```
 
-## Success Criteria
+## 成功基準
+実装が完了した状態とは：
+- ✅ 計画上の全タスクが完了済み `[x]` とマークされている
+- ✅ 指定された全ファイルに動作するコードが含まれている
+- ✅ コードがワークスペースのパターンと規約に従っている
+- ✅ プロジェクト内で全機能が期待通りに動作する
+- ✅ 各タスク完了後に変更ファイルが更新され、追加・変更・削除のエントリが記録されている
+- ✅ 変更ファイルに全フェーズの詳細なリリース準備文書と最終リリースサマリーを記載
 
-Implementation is complete when:
-- ✅ All plan tasks are marked complete `[x]`
-- ✅ All specified files contain working code
-- ✅ Code follows workspace patterns and conventions
-- ✅ All functionality works as expected within the project
-- ✅ Changes file is updated after every task completion with Added, Modified, or Removed entries
-- ✅ Changes file documents all phases with detailed release-ready documentation and final release summary
+## 変更ファイルテンプレート
+リリース実装進捗を追跡する変更ファイルのテンプレートとして以下を使用。
+`{{ }}`を適切な値に置換。ファイル名を`YYYYMMDD-タスク説明-変更.md`とし`./.copilot-tracking/changes/`に作成
 
-## Template Changes File
-
-Use the following as a template for the changes file that tracks implementation progress for releases.
-Replace `{{ }}` with appropriate values. Create this file in `./.copilot-tracking/changes/` with filename: `YYYYMMDD-task-description-changes.md`
-
-**IMPORTANT**: Update this file after EVERY task completion by appending to Added, Modified, or Removed sections.
-**MANDATORY**: Always include the following at the top of the changes file: `<!-- markdownlint-disable-file -->`
+**重要**: タスク完了のたびに、追加・変更・削除セクションに追記してこのファイルを更新してください。
+**必須**: 変更ファイルの先頭に必ず以下を含めてください: `<!-- markdownlint-disable-file -->`
 
 <!-- <changes-template> -->
 ```markdown
 <!-- markdownlint-disable-file -->
-# Release Changes: {{task name}}
 
-**Related Plan**: {{plan-file-name}}
-**Implementation Date**: {{YYYY-MM-DD}}
+# リリース変更点: {{task name}}
+**関連プラン**: {{plan-file-name}}
+**実装日**: {{YYYY-MM-DD}}
 
-## Summary
+## 概要
 
-{{Brief description of the overall changes made for this release}}
+{{このリリースで実施された全体的な変更の簡潔な説明}}
 
-## Changes
+## 変更点
 
-### Added
+### 追加
 
-- {{relative-file-path}} - {{one sentence summary of what was implemented}}
+- {{relative-file-path}} - {{実装内容の要約（1文）}}
 
-### Modified
+### 変更
 
-- {{relative-file-path}} - {{one sentence summary of what was changed}}
+- {{relative-file-path}} - {{変更内容の要約（1文）}}
 
-### Removed
+### 削除
 
-- {{relative-file-path}} - {{one sentence summary of what was removed}}
+- {{relative-file-path}} - {{削除内容の要約（1文）}}
 
-## Release Summary
+## リリース概要
 
-**Total Files Affected**: {{number}}
+**影響を受けたファイルの総数**: {{number}}
 
-### Files Created ({{count}})
+### 作成されたファイル ({{count}})
 
 - {{file-path}} - {{purpose}}
 
-### Files Modified ({{count}})
+### 変更されたファイル ({{count}})
 
 - {{file-path}} - {{changes-made}}
 
-### Files Removed ({{count}})
+### 削除されたファイル ({{count}})
 
 - {{file-path}} - {{reason}}
 
-### Dependencies & Infrastructure
+### 依存関係とインフラストラクチャ
 
-- **New Dependencies**: {{list-of-new-dependencies}}
-- **Updated Dependencies**: {{list-of-updated-dependencies}}
-- **Infrastructure Changes**: {{infrastructure-updates}}
-- **Configuration Updates**: {{configuration-changes}}
+- **新規依存関係**: {{list-of-new-dependencies}}
+- **更新された依存関係**: {{更新された依存関係のリスト}}
+- **インフラストラクチャの変更**: {{インフラストラクチャの更新内容}}
+- **設定の更新**: {{設定の変更内容}}
 
-### Deployment Notes
+### デプロイメントに関する注意事項
 
-{{Any specific deployment considerations or steps}}
+{{デプロイメントに関する具体的な考慮事項や手順}}
 ```
 <!-- </changes-template> -->

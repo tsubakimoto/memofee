@@ -3,75 +3,75 @@ description: 'Blazor component and application patterns'
 applyTo: '**/*.razor, **/*.razor.cs, **/*.razor.css'
 ---
 
-## Blazor Code Style and Structure
+## Blazor コードスタイルと構造
 
-- Write idiomatic and efficient Blazor and C# code.
-- Follow .NET and Blazor conventions.
-- Use Razor Components appropriately for component-based UI development.
-- Prefer inline functions for smaller components but separate complex logic into code-behind or service classes.
-- Async/await should be used where applicable to ensure non-blocking UI operations.
+- Blazor および C# コードは慣習に則り効率的に記述する。
+- .NET および Blazor の規約に従う。
+- コンポーネントベースの UI 開発には Razor コンポーネントを適切に使用する。
+- 小規模なコンポーネントにはインライン関数を優先するが、複雑なロジックはコードビハインドまたはサービスクラスに分離する。
+- 非同期処理が必要な箇所では Async/await を使用し、UI 操作がブロックされないようにする。
 
-## Naming Conventions
+## 命名規則
 
-- Follow PascalCase for component names, method names, and public members.
-- Use camelCase for private fields and local variables.
-- Prefix interface names with "I" (e.g., IUserService).
+- コンポーネント名、メソッド名、パブリックメンバーには PascalCase を採用する。
+- プライベートフィールドとローカル変数には camelCase を使用する。
+- インターフェース名には 「I」 を接頭辞として付ける（例: IUserService）。
 
-## Blazor and .NET Specific Guidelines
+## Blazorおよび.NET固有のガイドライン
 
-- Utilize Blazor's built-in features for component lifecycle (e.g., OnInitializedAsync, OnParametersSetAsync).
-- Use data binding effectively with @bind.
-- Leverage Dependency Injection for services in Blazor.
-- Structure Blazor components and services following Separation of Concerns.
-- Always use the latest version C#, currently C# 13 features like record types, pattern matching, and global usings.
+- コンポーネントライフサイクルにはBlazorの組み込み機能（例：OnInitializedAsync、OnParametersSetAsync）を活用する。
+- @bindによるデータバインディングを効果的に使用する。
+- Blazorのサービスには依存性注入を活用する。
+- Blazorコンポーネントとサービスは関心事の分離（Separation of Concerns）に従って構成する。
+- 常に最新版のC#を使用すること（現在はC# 13の機能：レコード型、パターンマッチング、グローバルusingなど）。
 
-## Error Handling and Validation
+## エラー処理とバリデーション
 
-- Implement proper error handling for Blazor pages and API calls.
-- Use logging for error tracking in the backend and consider capturing UI-level errors in Blazor with tools like ErrorBoundary.
-- Implement validation using FluentValidation or DataAnnotations in forms.
+- BlazorページおよびAPI呼び出しに対して適切なエラー処理を実装すること。
+- バックエンドでのエラー追跡にはロギングを使用し、BlazorではErrorBoundaryなどのツールでUIレベルのエラーを捕捉することを検討すること。
+- フォームではFluentValidationまたはDataAnnotationsを使用したバリデーションを実装すること。
 
-## Blazor API and Performance Optimization
+## Blazor APIとパフォーマンス最適化
 
-- Utilize Blazor server-side or WebAssembly optimally based on the project requirements.
-- Use asynchronous methods (async/await) for API calls or UI actions that could block the main thread.
-- Optimize Razor components by reducing unnecessary renders and using StateHasChanged() efficiently.
-- Minimize the component render tree by avoiding re-renders unless necessary, using ShouldRender() where appropriate.
-- Use EventCallbacks for handling user interactions efficiently, passing only minimal data when triggering events.
+- プロジェクト要件に基づき、BlazorサーバーサイドまたはWebAssemblyを最適に活用する。
+- API呼び出しやメインスレッドをブロックする可能性のあるUI操作には非同期メソッド（async/await）を使用する。
+- 不要なレンダリングを削減しStateHasChanged()を効率的に使用してRazorコンポーネントを最適化する。
+- 必要ない限り再レンダリングを避け、適切な箇所でShouldRender()を使用しコンポーネントのレンダリングツリーを最小化する。
+- ユーザー操作の効率的な処理にはEventCallbacksを使用し、イベント発生時には最小限のデータのみを送信する。
 
-## Caching Strategies
+## キャッシュ戦略
 
-- Implement in-memory caching for frequently used data, especially for Blazor Server apps. Use IMemoryCache for lightweight caching solutions.
-- For Blazor WebAssembly, utilize localStorage or sessionStorage to cache application state between user sessions.
-- Consider Distributed Cache strategies (like Redis or SQL Server Cache) for larger applications that need shared state across multiple users or clients.
-- Cache API calls by storing responses to avoid redundant calls when data is unlikely to change, thus improving the user experience.
+- 頻繁に使用されるデータ（特にBlazor Serverアプリ）にはインメモリキャッシュを実装する。軽量なキャッシュソリューションにはIMemoryCacheを使用する。
+- Blazor WebAssemblyでは、ユーザーセッション間でアプリケーション状態をキャッシュするためにlocalStorageまたはsessionStorageを利用する。
+- 複数のユーザーやクライアント間で状態を共有する必要がある大規模アプリケーションでは、分散キャッシュ戦略（Redis や SQL Server Cache など）を検討する。
+- データが変更される可能性が低い場合、API 呼び出しのレスポンスを保存してキャッシュし、冗長な呼び出しを回避することでユーザーエクスペリエンスを向上させる。
 
-## State Management Libraries
+## 状態管理ライブラリ
 
-- Use Blazor's built-in Cascading Parameters and EventCallbacks for basic state sharing across components.
-- Implement advanced state management solutions using libraries like Fluxor or BlazorState when the application grows in complexity.
-- For client-side state persistence in Blazor WebAssembly, consider using Blazored.LocalStorage or Blazored.SessionStorage to maintain state between page reloads.
-- For server-side Blazor, use Scoped Services and the StateContainer pattern to manage state within user sessions while minimizing re-renders.
+- コンポーネント間で基本的な状態を共有するには、Blazor の組み込み機能であるカスケードパラメータと EventCallbacks を使用する。
+- アプリケーションの複雑化に伴い、FluxorやBlazorStateなどのライブラリを用いた高度な状態管理ソリューションを実装する。
+- Blazor WebAssemblyにおけるクライアントサイドの状態永続化には、ページ再読み込み間での状態維持にBlazored.LocalStorageまたはBlazored.SessionStorageの利用を検討する。
+- サーバーサイドBlazorでは、ユーザーセッション内の状態管理と再レンダリングの最小化にスコープ付きサービスとStateContainerパターンを活用する。
 
-## API Design and Integration
+## API設計と統合
 
-- Use HttpClient or other appropriate services to communicate with external APIs or your own backend.
-- Implement error handling for API calls using try-catch and provide proper user feedback in the UI.
+- 外部APIや自社バックエンドとの通信にはHttpClientまたは適切なサービスを使用する。
+- API呼び出しのエラー処理をtry-catchで実装し、UI上で適切なユーザーフィードバックを提供する。
 
-## Testing and Debugging in Visual Studio
+## Visual Studioでのテストとデバッグ
 
-- All unit testing and integration testing should be done in Visual Studio Enterprise.
-- Test Blazor components and services using xUnit, NUnit, or MSTest.
-- Use Moq or NSubstitute for mocking dependencies during tests.
-- Debug Blazor UI issues using browser developer tools and Visual Studio's debugging tools for backend and server-side issues.
-- For performance profiling and optimization, rely on Visual Studio's diagnostics tools.
+- すべてのユニットテストおよび統合テストはVisual Studio Enterpriseで実施する。
+- BlazorコンポーネントとサービスのテストにはxUnit、NUnit、またはMSTestを使用する。
+- テスト中の依存関係モックにはMoqまたはNSubstituteを使用する。
+- Blazor UIの問題はブラウザ開発者ツールで、バックエンド/サーバーサイドの問題はVisual Studioのデバッグツールで調査する。
+- パフォーマンスプロファイリングと最適化にはVisual Studioの診断ツールを活用する。
 
-## Security and Authentication
+## セキュリティと認証
 
-- Implement Authentication and Authorization in the Blazor app where necessary using ASP.NET Identity or JWT tokens for API authentication.
-- Use HTTPS for all web communication and ensure proper CORS policies are implemented.
+- Blazorアプリに必要な認証/認可を実装する（API認証にはASP.NET IdentityまたはJWTトークンを使用）。
+- すべてのWeb通信にHTTPSを使用し、適切なCORSポリシーが実装されていることを確認する。
 
-## API Documentation and Swagger
+## APIドキュメントとSwagger
 
-- Use Swagger/OpenAPI for API documentation for your backend API services.
-- Ensure XML documentation for models and API methods for enhancing Swagger documentation.
+- バックエンドAPIサービスのドキュメントにはSwagger/OpenAPIを使用する。
+- Swaggerドキュメントを充実させるため、モデルとAPIメソッドのXMLドキュメントを必ず用意する。

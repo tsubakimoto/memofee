@@ -3,72 +3,70 @@ description: 'Guidelines for generating SQL statements and stored procedures'
 applyTo: '**/*.sql'
 ---
 
-# SQL Development
+# SQL開発
 
-## Database schema generation
-- all table names should be in singular form
-- all column names should be in singular form
-- all tables should have a primary key column named `id`
-- all tables should have a column named `created_at` to store the creation timestamp
-- all tables should have a column named `updated_at` to store the last update timestamp
+## データベーススキーマ生成
+- すべてのテーブル名は単数形とする
+- すべての列名は単数形とする
+- すべてのテーブルに`id`という名前の主キー列を設ける
+- すべてのテーブルに作成時刻を保存する`created_at`列を設ける
+- すべてのテーブルに最終更新時刻を保存する`updated_at`列を設ける
 
-## Database schema design
-- all tables should have a primary key constraint
-- all foreign key constraints should have a name
-- all foreign key constraints should be defined inline
-- all foreign key constraints should have `ON DELETE CASCADE` option
-- all foreign key constraints should have `ON UPDATE CASCADE` option
-- all foreign key constraints should reference the primary key of the parent table
+## データベーススキーマ設計
+- すべてのテーブルに主キー制約を設定すること
+- すべての外部キー制約に名前を付けること
+- すべての外部キー制約をインラインで定義すること
+- すべての外部キー制約に `ON DELETE CASCADE` オプションを設定すること
+- すべての外部キー制約に `ON UPDATE CASCADE` オプションを設定すること
+- すべての外部キー制約は親テーブルの主キーを参照すること
 
-## SQL Coding Style
-- use uppercase for SQL keywords (SELECT, FROM, WHERE)
-- use consistent indentation for nested queries and conditions
-- include comments to explain complex logic
-- break long queries into multiple lines for readability
-- organize clauses consistently (SELECT, FROM, JOIN, WHERE, GROUP BY, HAVING, ORDER BY)
+## SQLコーディングスタイル
+- SQLキーワード（SELECT、FROM、WHERE）は大文字で記述
+- ネストされたクエリや条件では一貫したインデントを使用
+- 複雑なロジックはコメントで説明
+- 長いクエリは可読性のために複数行に分割
+- 句の順序を統一（SELECT、FROM、JOIN、WHERE、GROUP BY、HAVING、ORDER BY）
 
-## SQL Query Structure
-- use explicit column names in SELECT statements instead of SELECT *
-- qualify column names with table name or alias when using multiple tables
-- limit the use of subqueries when joins can be used instead
-- include LIMIT/TOP clauses to restrict result sets
-- use appropriate indexing for frequently queried columns
-- avoid using functions on indexed columns in WHERE clauses
+## SQLクエリ構造
+- SELECT文ではSELECT *ではなく明示的な列名を使用
+- 複数テーブルを使用する場合、列名にテーブル名またはエイリアスを付加
+- 結合で代替可能な場合はサブクエリの使用を制限
+- 結果セットを制限するためLIMIT/TOP句を含める
+- 頻繁にクエリされる列には適切なインデックスを適用
+- WHERE句でインデックス付き列に対する関数使用を避ける
 
-## Stored Procedure Naming Conventions
-- prefix stored procedure names with 'usp_'
-- use PascalCase for stored procedure names
-- use descriptive names that indicate purpose (e.g., usp_GetCustomerOrders)
-- include plural noun when returning multiple records (e.g., usp_GetProducts)
-- include singular noun when returning single record (e.g., usp_GetProduct)
+## ストアドプロシージャ命名規則
+- ストアドプロシージャ名に 『usp_』 を接頭辞として付ける
+- ストアドプロシージャ名は PascalCase を使用する
+- 目的を示す説明的な名前を使用する（例: usp_GetCustomerOrders）
+- 複数のレコードを返す場合は複数形の名詞を含める（例: usp_GetProducts）
+- 単一のレコードを返す場合は単数形の名詞を含める（例: usp_GetProduct）
 
-## Parameter Handling
-- prefix parameters with '@'
-- use camelCase for parameter names
-- provide default values for optional parameters
-- validate parameter values before use
-- document parameters with comments
-- arrange parameters consistently (required first, optional later)
+## パラメータ処理
+- パラメータ名に 『@』 を接頭辞として付ける
+- パラメータ名にはキャメルケースを使用する
+- オプションパラメータにはデフォルト値を設定する
+- 使用前にパラメータ値を検証する
+- コメントでパラメータを文書化する
+- パラメータを統一的に配置する（必須パラメータを先頭、オプションパラメータを後方に配置）
 
+## ストアドプロシージャの構造
+- 説明、パラメータ、戻り値を含むヘッダーコメントブロックを含める
+- 標準化されたエラーコード/メッセージを返す
+- 一貫した列順で結果セットを返す
+- ステータス情報返却にはOUTPUTパラメータを使用する
+- 一時テーブルには接頭辞 『tmp_』 を付ける
 
-## Stored Procedure Structure
-- include header comment block with description, parameters, and return values
-- return standardized error codes/messages
-- return result sets with consistent column order
-- use OUTPUT parameters for returning status information
-- prefix temporary tables with 'tmp_'
+## SQLセキュリティのベストプラクティス
+- SQLインジェクション防止のため全クエリをパラメータ化
+- 動的SQL実行時はプリペアドステートメントを使用
+- SQLスクリプトへの認証情報埋め込みを回避
+- システム詳細を漏洩しない適切なエラー処理を実装
+- ストアドプロシージャ内での動的SQL使用を回避
 
-
-## SQL Security Best Practices
-- parameterize all queries to prevent SQL injection
-- use prepared statements when executing dynamic SQL
-- avoid embedding credentials in SQL scripts
-- implement proper error handling without exposing system details
-- avoid using dynamic SQL within stored procedures
-
-## Transaction Management
-- explicitly begin and commit transactions
-- use appropriate isolation levels based on requirements
-- avoid long-running transactions that lock tables
-- use batch processing for large data operations
-- include SET NOCOUNT ON for stored procedures that modify data
+## トランザクション管理
+- トランザクションの明示的な開始とコミット
+- 要件に基づいた適切な分離レベルの使用
+- テーブルをロックする長期実行トランザクションの回避
+- 大規模データ操作にはバッチ処理を使用
+- データを変更するストアドプロシージャにはSET NOCOUNT ONを含める

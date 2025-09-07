@@ -1,323 +1,322 @@
 ---
-description: 'Specification-Driven Workflow v1 provides a structured approach to software development, ensuring that requirements are clearly defined, designs are meticulously planned, and implementations are thoroughly documented and validated.'
+description: '仕様駆動型ワークフロー v1 は、ソフトウェア開発に対する構造化されたアプローチを提供し、要件が明確に定義され、設計が綿密に計画され、実装が徹底的に文書化および検証されることを保証します。'
 applyTo: '**'
 ---
-# Spec Driven Workflow v1
+# 仕様駆動ワークフロー v1
 
-**Specification-Driven Workflow:**
-Bridge the gap between requirements and implementation.
+**仕様駆動ワークフロー:**
+要件と実装の間のギャップを埋める。
 
-**Maintain these artifacts at all times:**
+**常に以下の成果物を維持する:**
+- **`requirements.md`**: 構造化されたEARS表記によるユーザーストーリーと受け入れ基準。
+- **`design.md`**: 技術アーキテクチャ、シーケンス図、実装上の考慮事項。
+- **`tasks.md`**: 詳細かつ追跡可能な実装計画。
 
-- **`requirements.md`**: User stories and acceptance criteria in structured EARS notation.
-- **`design.md`**: Technical architecture, sequence diagrams, implementation considerations.
-- **`tasks.md`**: Detailed, trackable implementation plan.
+## ユニバーサルドキュメントフレームワーク
 
-## Universal Documentation Framework
+**ドキュメントルール:**
+詳細テンプレートを全ドキュメントの**主要な情報源**として使用する。
 
-**Documentation Rule:**
-Use the detailed templates as the **primary source of truth** for all documentation.
+**要約フォーマット:**
+変更履歴やプルリクエストの説明など簡潔なアーティファクトにのみ使用する。
 
-**Summary formats:**
-Use only for concise artifacts such as changelogs and pull request descriptions.
+### 詳細ドキュメントテンプレート
 
-### Detailed Documentation Templates
-
-#### Action Documentation Template (All Steps/Executions/Tests)
-
-```bash
-### [TYPE] - [ACTION] - [TIMESTAMP]
-**Objective**: [Goal being accomplished]
-**Context**: [Current state, requirements, and reference to prior steps]
-**Decision**: [Approach chosen and rationale, referencing the Decision Record if applicable]
-**Execution**: [Steps taken with parameters and commands used. For code, include file paths.]
-**Output**: [Complete and unabridged results, logs, command outputs, and metrics]
-**Validation**: [Success verification method and results. If failed, include a remediation plan.]
-**Next**: [Automatic continuation plan to the next specific action]
-```
-
-#### Decision Record Template (All Decisions)
+#### アクションドキュメントテンプレート (全ステップ/実行/テスト)
 
 ```bash
-### Decision - [TIMESTAMP]
-**Decision**: [What was decided]
-**Context**: [Situation requiring decision and data driving it]
-**Options**: [Alternatives evaluated with brief pros and cons]
-**Rationale**: [Why the selected option is superior, with trade-offs explicitly stated]
-**Impact**: [Anticipated consequences for implementation, maintainability, and performance]
-**Review**: [Conditions or schedule for reassessing this decision]
+### [タイプ] - [アクション] - [タイムスタンプ]
+**目的**: [達成される目標]
+**背景**: [現状、要件、および先行ステップへの参照]
+**決定**: [選択したアプローチと根拠、該当する場合は決定記録を参照]
+**実行**: [使用したパラメータとコマンドを含む実施手順。コードの場合はファイルパスを含める]
+**出力**: [完全かつ省略なしの結果、ログ、コマンド出力、メトリクス]
+**検証**: [成功確認方法と結果。失敗した場合は修正計画を含める]
+**次**: [次の特定アクションへの自動継続計画]
 ```
 
-### Summary Formats (for Reporting)
+#### 決定記録テンプレート（全決定対象）
 
-#### Streamlined Action Log
+```bash
+### 決定 - [タイムスタンプ]
+**決定内容**: [決定事項]
+**背景**: [決定を必要とした状況と根拠データ]
+**選択肢**: [評価した代替案と簡潔な長所・短所]
+**理由**: [選定案が優れている根拠と明示的なトレードオフ]
+**影響**: [実装・保守性・パフォーマンスへの予測される結果]
+**レビュー**: [本決定の再評価条件またはスケジュール]
+```
 
-For generating concise changelogs. Each log entry is derived from a full Action Document.
+### 報告用サマリー形式
 
-`[TYPE][TIMESTAMP] Goal: [X] → Action: [Y] → Result: [Z] → Next: [W]`
+#### 簡略化アクションログ
 
-#### Compressed Decision Record
+簡潔な変更履歴生成用。各ログ項目は完全なアクション文書から抽出。
 
-For use in pull request summaries or executive summaries.
+`[タイプ][タイムスタンプ] 目標: [X] → アクション: [Y] → 結果: [Z] → 次工程: [W]`
 
-`Decision: [X] | Rationale: [Y] | Impact: [Z] | Review: [Date]`
+#### 圧縮決定記録
 
-## Execution Workflow (6-Phase Loop)
+プルリクエスト要約やエグゼクティブサマリーで使用。
 
-**Never skip any step. Use consistent terminology. Reduce ambiguity.**
+`決定: [X] | 根拠: [Y] | 影響: [Z] | レビュー: [日付]`
 
-### **Phase 1: ANALYZE**
+## 実行ワークフロー（6段階ループ）
 
-**Objective:**
+**いかなるステップも省略しない。用語を統一する。曖昧さを減らす。**
 
-- Understand the problem.
-- Analyze the existing system.
-- Produce a clear, testable set of requirements.
-- Think about the possible solutions and their implications.
+### **フェーズ1: 分析**
 
-**Checklist:**
+**目的:**
 
-- [ ] Read all provided code, documentation, tests, and logs.
-      - Document file inventory, summaries, and initial analysis results.
-- [ ] Define requirements in **EARS Notation**:
-      - Transform feature requests into structured, testable requirements.
-      - Format: `WHEN [a condition or event], THE SYSTEM SHALL [expected behavior]`
-- [ ] Identify dependencies and constraints.
-      - Document a dependency graph with risks and mitigation strategies.
-- [ ] Map data flows and interactions.
-      - Document system interaction diagrams and data models.
-- [ ] Catalog edge cases and failures.
-      - Document a comprehensive edge case matrix and potential failure points.
-- [ ] Assess confidence.
-      - Generate a **Confidence Score (0-100%)** based on clarity of requirements, complexity, and problem scope.
-      - Document the score and its rationale.
+- 問題を理解する。
+- 既存システムを分析する。
+- 明確でテスト可能な要件セットを作成する。
+- 可能な解決策とその影響について検討する。
 
-**Critical Constraint:**
+**チェックリスト:**
 
-- **Do not proceed until all requirements are clear and documented.**
+- [ ] 提供された全コード、ドキュメント、テスト、ログを読む。
+    - ファイル一覧、要約、初期分析結果を文書化する。
+- [ ] 要件を**EARS表記法**で定義する:
+    - 機能要求を構造化されたテスト可能な要件に変換する。
+    - 形式: `WHEN [条件またはイベントが発生した場合], THE SYSTEM SHALL [期待される動作]`
+- [ ] 依存関係と制約を特定する。
+    - リスクと緩和策を含む依存関係グラフを文書化する。
+- [ ] データフローと相互作用をマッピングする。
+    - システム相互作用図とデータモデルを文書化する。
+- [ ] エッジケースと障害をカタログ化する。
+    - 包括的なエッジケースマトリクスと潜在的な障害点を文書化する。
+- [ ] 信頼度を評価する。
+    - 要件の明確さ、複雑さ、問題範囲に基づき**信頼度スコア（0-100%）**を生成する。
+    - スコアとその根拠を文書化する。
 
-### **Phase 2: DESIGN**
+**重要制約事項:**
 
-**Objective:**
+- **全ての要件が明確化され文書化されるまで、次の段階に進んではならない。**
 
-- Create a comprehensive technical design and a detailed implementation plan.
+### **フェーズ2: 設計**
 
-**Checklist:**
+**目的:**
 
-- [ ] **Define adaptive execution strategy based on Confidence Score:**
-  - **High Confidence (>85%)**
-    - Draft a comprehensive, step-by-step implementation plan.
-    - Skip proof-of-concept steps.
-    - Proceed with full, automated implementation.
-    - Maintain standard comprehensive documentation.
-  - **Medium Confidence (66–85%)**
-    - Prioritize a **Proof-of-Concept (PoC)** or **Minimum Viable Product (MVP)**.
-    - Define clear success criteria for PoC/MVP.
-    - Build and validate PoC/MVP first, then expand plan incrementally.
-    - Document PoC/MVP goals, execution, and validation results.
-  - **Low Confidence (<66%)**
-    - Dedicate first phase to research and knowledge-building.
-    - Use semantic search and analyze similar implementations.
-    - Synthesize findings into a research document.
-    - Re-run ANALYZE phase after research.
-    - Escalate only if confidence remains low.
+- 包括的な技術設計と詳細な実装計画を作成する。
 
-- [ ] **Document technical design in `design.md`:**
-  - **Architecture:** High-level overview of components and interactions.
-  - **Data Flow:** Diagrams and descriptions.
-  - **Interfaces:** API contracts, schemas, public-facing function signatures.
-  - **Data Models:** Data structures and database schemas.
+**チェックリスト:**
 
-- [ ] **Document error handling:**
-  - Create an error matrix with procedures and expected responses.
+- [ ] **信頼度スコアに基づく適応的実行戦略を定義:**
+  - **高信頼度 (>85%)**
+    - 包括的な段階的実装計画を草案化する。
+    - 概念実証（PoC）ステップを省略する。
+    - 完全自動化された実装を推進する。
+    - 標準的な包括的ドキュメントを維持する。
+  - **中程度の信頼度 (66–85%)**
+    - **概念実証 (PoC)** または **最小限の実行可能製品 (MVP)** を優先する。
+    - PoC/MVP の明確な成功基準を定義する。
+    - まず PoC/MVP を構築・検証し、計画を段階的に拡大する。
+    - PoC/MVPの目標、実行内容、検証結果を文書化する。
+  - **信頼度低（<66%）**
+    - 最初のフェーズを調査と知識構築に充てる。
+    - 意味検索を活用し、類似実装を分析する。
+    - 調査結果を研究文書にまとめる。
+    - 調査後、ANALYZEフェーズを再実行する。
+    - 信頼度が低い場合のみエスカレーションする。
 
-- [ ] **Define unit testing strategy.**
+- [ ] **技術設計を`design.md`に文書化:**
+  - **アーキテクチャ:** コンポーネントと相互作用の高レベル概要。
+  - **データフロー:** 図解と説明。
+  - **インターフェース:** API契約、スキーマ、公開関数シグネチャ。
+  - **データモデル:** データ構造とデータベーススキーマ。
 
-- [ ] **Create implementation plan in `tasks.md`:**
-  - For each task, include description, expected outcome, and dependencies.
+- [ ] **エラー処理の文書化:
+  - 手順と想定応答を記載したエラーマトリックスを作成。
 
-**Critical Constraint:**
+- [ ] **ユニットテスト戦略の定義。
 
-- **Do not proceed to implementation until design and plan are complete and validated.**
+- [ ] **`tasks.md`に実装計画を作成:
+  - 各タスクに説明、期待される成果、依存関係を含める。
 
-### **Phase 3: IMPLEMENT**
+**重要制約:**
 
-**Objective:**
+- **設計と計画が完了し検証されるまで実装に進んではならない。**
 
-- Write production-quality code according to the design and plan.
+### **フェーズ3: 実装**
 
-**Checklist:**
+**目的:**
 
-- [ ] Code in small, testable increments.
-      - Document each increment with code changes, results, and test links.
-- [ ] Implement from dependencies upward.
-      - Document resolution order, justification, and verification.
-- [ ] Follow conventions.
-      - Document adherence and any deviations with a Decision Record.
-- [ ] Add meaningful comments.
-      - Focus on intent ("why"), not mechanics ("what").
-- [ ] Create files as planned.
-      - Document file creation log.
-- [ ] Update task status in real time.
+- 設計と計画に基づき、本番環境品質のコードを記述する。
 
-**Critical Constraint:**
+**チェックリスト:**
 
-- **Do not merge or deploy code until all implementation steps are documented and tested.**
+- [ ] テスト可能な小さな単位でコードを記述する。
+      - 各単位ごとにコード変更内容、結果、テストリンクを文書化する。
+- [ ] 依存関係を上流から実装する。
+      - 解決順序、根拠、検証を文書化する。
+- [ ] 規約に従う。
+      - 準拠状況と逸脱事項を決定記録で文書化する。
+- [ ] 意味のあるコメントを追加する。
+      - 技術的詳細（「何を」）ではなく意図（「なぜ」）に焦点を当てる。
+- [ ] 計画通りにファイルを作成する。
+      - ファイル作成ログを文書化する。
+- [ ] タスクの進捗状況をリアルタイムで更新する。
 
-### **Phase 4: VALIDATE**
+**重要な制約:**
 
-**Objective:**
+- **すべての実装ステップが文書化されテストされるまで、コードをマージまたはデプロイしないこと。**
 
-- Verify that implementation meets all requirements and quality standards.
+### **フェーズ4: 検証**
 
-**Checklist:**
+**目的:**
 
-- [ ] Execute automated tests.
-      - Document outputs, logs, and coverage reports.
-      - For failures, document root cause analysis and remediation.
-- [ ] Perform manual verification if necessary.
-      - Document procedures, checklists, and results.
-- [ ] Test edge cases and errors.
-      - Document results and evidence of correct error handling.
-- [ ] Verify performance.
-      - Document metrics and profile critical sections.
-- [ ] Log execution traces.
-      - Document path analysis and runtime behavior.
+- 実装がすべての要件と品質基準を満たしていることを確認する。
 
-**Critical Constraint:**
+**チェックリスト:**
 
-- **Do not proceed until all validation steps are complete and all issues are resolved.**
+- [ ] 自動テストを実行する。
+    - 出力、ログ、カバレッジレポートを記録する。
+    - 失敗時は根本原因分析と修正措置を記録する。
+- [ ] 必要に応じて手動検証を実施する。
+    - 手順、チェックリスト、結果を記録する。
+- [ ] エッジケースとエラーをテストする。
+    - 結果と適切なエラー処理の証拠を記録する。
+- [ ] パフォーマンスを検証する。
+    - メトリクスを記録し、重要セクションをプロファイリングする。
+- [ ] 実行トレースをログ記録する。
+    - パス解析と実行時挙動を文書化する。
 
-### **Phase 5: REFLECT**
+**重要制約:**
 
-**Objective:**
+- **全ての検証ステップが完了し、全ての問題が解決されるまで進めないこと。**
 
-- Improve codebase, update documentation, and analyze performance.
+### **フェーズ5: 振り返り**
 
-**Checklist:**
+**目的:**
 
-- [ ] Refactor for maintainability.
-      - Document decisions, before/after comparisons, and impact.
-- [ ] Update all project documentation.
-      - Ensure all READMEs, diagrams, and comments are current.
-- [ ] Identify potential improvements.
-      - Document backlog with prioritization.
-- [ ] Validate success criteria.
-      - Document final verification matrix.
-- [ ] Perform meta-analysis.
-      - Reflect on efficiency, tool usage, and protocol adherence.
-- [ ] Auto-create technical debt issues.
-      - Document inventory and remediation plans.
+- コードベースの改善、ドキュメントの更新、パフォーマンスの分析を行う。
 
-**Critical Constraint:**
+**チェックリスト:**
 
-- **Do not close the phase until all documentation and improvement actions are logged.**
+- [ ] 保守性向上のためのリファクタリングを実施する。
+    - 決定事項、前後比較、影響を文書化する。
+- [ ] プロジェクト文書を全て更新する。
+    - すべてのREADME、図解、コメントが最新であることを確認する。
+- [ ] 潜在的な改善点を特定する。
+    - 優先順位付けしたバックログを文書化する。
+- [ ] 成功基準を検証する。
+    - 最終検証マトリクスを文書化する。
+- [ ] メタ分析を実施する。
+    - 効率性、ツール使用状況、プロトコル遵守状況を振り返る。
+- [ ] 技術的負債の課題を自動生成する。
+    - インベントリと是正計画を文書化する。
 
-### **Phase 6: HANDOFF**
+**重要な制約事項：**
 
-**Objective:**
+- **全てのドキュメントと改善アクションが記録されるまで、フェーズを終了しないこと。**
 
-- Package work for review and deployment, and transition to next task.
+### **フェーズ6：引き継ぎ**
 
-**Checklist:**
+**目的:**
 
-- [ ] Generate executive summary.
-      - Use **Compressed Decision Record** format.
-- [ ] Prepare pull request (if applicable):
-    1. Executive summary.
-    2. Changelog from **Streamlined Action Log**.
-    3. Links to validation artifacts and Decision Records.
-    4. Links to final `requirements.md`, `design.md`, and `tasks.md`.
-- [ ] Finalize workspace.
-      - Archive intermediate files, logs, and temporary artifacts to `.agent_work/`.
-- [ ] Continue to next task.
-      - Document transition or completion.
+- レビューとデプロイのための作業をパッケージ化し、次のタスクに移行する。
 
-**Critical Constraint:**
+**チェックリスト:**
 
-- **Do not consider the task complete until all handoff steps are finished and documented.**
+- [ ] エグゼクティブサマリーを生成する。
+    - **圧縮意思決定記録** フォーマットを使用する。
+- [ ] プルリクエストを準備する（該当する場合）:
+    1. エグゼクティブサマリー。
+    2. **合理化されたアクションログ** からの変更履歴。
+    3. 検証成果物および決定記録へのリンク。
+    4. 最終版`requirements.md`、`design.md`、`tasks.md`へのリンク。
+- [ ] ワークスペースを最終化。
+    - 中間ファイル、ログ、一時成果物を`.agent_work/`にアーカイブ。
+- [ ] 次タスクへ移行。
+    - 移行または完了を文書化。
 
-## Troubleshooting & Retry Protocol
+**重要制約:**
 
-**If you encounter errors, ambiguities, or blockers:**
+- **全ての引き継ぎステップが完了し文書化されるまで、タスクを完了と見なさないこと。**
 
-**Checklist:**
+## トラブルシューティングと再試行手順
 
-1. **Re-analyze**:
-   - Revisit the ANALYZE phase.
-   - Confirm all requirements and constraints are clear and complete.
-2. **Re-design**:
-   - Revisit the DESIGN phase.
-   - Update technical design, plans, or dependencies as needed.
-3. **Re-plan**:
-   - Adjust the implementation plan in `tasks.md` to address new findings.
-4. **Retry execution**:
-   - Re-execute failed steps with corrected parameters or logic.
-5. **Escalate**:
-   - If the issue persists after retries, follow the escalation protocol.
+**エラー、曖昧さ、または障害が発生した場合:**
 
-**Critical Constraint:**
+**チェックリスト:**
 
-- **Never proceed with unresolved errors or ambiguities. Always document troubleshooting steps and outcomes.**
+1. **再分析**:
+   - 分析フェーズを再検討する。
+   - 全ての要件と制約が明確かつ完全であることを確認する。
+2. **再設計**:
+   - DESIGNフェーズを再検討する。
+   - 必要に応じて技術設計、計画、依存関係を更新する。
+3. **再計画**:
+   - 新たな発見に対応するため、`tasks.md`の実装計画を調整する。
+4. **再実行**:
+   - 失敗したステップを修正したパラメータやロジックで再実行する。
+5. **エスカレーション**:
+   - 再実行後も問題が継続する場合、エスカレーション手順に従う。
 
-## Technical Debt Management (Automated)
+**重大な制約事項:**
 
-### Identification & Documentation
+- **未解決のエラーや曖昧な点を放置して進めてはならない。常にトラブルシューティングの手順と結果を記録すること。**
 
-- **Code Quality**: Continuously assess code quality during implementation using static analysis.
-- **Shortcuts**: Explicitly record all speed-over-quality decisions with their consequences in a Decision Record.
-- **Workspace**: Monitor for organizational drift and naming inconsistencies.
-- **Documentation**: Track incomplete, outdated, or missing documentation.
+## 技術的負債管理（自動化）
 
-### Auto-Issue Creation Template
+### 特定と文書化
+
+- **コード品質**: 静的解析を用いて実装中に継続的にコード品質を評価する。
+- **ショートカット**: 品質を犠牲にした迅速化判断は、その影響と共に決定記録に明示的に記録する。
+- **ワークスペース**: 組織的なドリフトや命名規則の不一致を監視する。
+- **ドキュメント**: 不完全、陳腐化、欠落したドキュメントを追跡する。
+
+### 自動課題作成テンプレート
 
 ```text
-**Title**: [Technical Debt] - [Brief Description]
-**Priority**: [High/Medium/Low based on business impact and remediation cost]
-**Location**: [File paths and line numbers]
-**Reason**: [Why the debt was incurred, linking to a Decision Record if available]
-**Impact**: [Current and future consequences (e.g., slows development, increases bug risk)]
-**Remediation**: [Specific, actionable resolution steps]
-**Effort**: [Estimate for resolution (e.g., T-shirt size: S, M, L)]
+**タイトル**: [技術的負債] - [概要]
+**優先度**: [ビジネスへの影響度と修正コストに基づく高/中/低]
+**場所**: [ファイルパスと行番号]
+**理由**: [負債が発生した原因（可能であれば意思決定記録へのリンク付き）]
+**影響**: [現在および将来的な結果（例：開発遅延、バグリスク増加）]
+**修正**: [具体的かつ実行可能な解決手順]
+**工数**: [解決の見積もり（例：Tシャツサイズ：S、M、L）]
 ```
 
-### Remediation (Auto-Prioritized)
+### 修正（自動優先順位付け）
 
-- Risk-based prioritization with dependency analysis.
-- Effort estimation to aid in future planning.
-- Propose migration strategies for large refactoring efforts.
+- 依存関係分析によるリスクベースの優先順位付け。
+- 将来の計画立案を支援する工数見積もり。
+- 大規模リファクタリング作業向けの移行戦略提案。
 
-## Quality Assurance (Automated)
+## 品質保証（自動化）
 
-### Continuous Monitoring
+### 継続的モニタリング
 
-- **Static Analysis**: Linting for code style, quality, security vulnerabilities, and architectural rule adherence.
-- **Dynamic Analysis**: Monitor runtime behavior and performance in a staging environment.
-- **Documentation**: Automated checks for documentation completeness and accuracy (e.g., linking, format).
+- **静的解析**: コードスタイル、品質、セキュリティ脆弱性、アーキテクチャルルールの順守状況に対するリンティング。
+- **動的解析**: ステージング環境における実行時動作とパフォーマンスの監視。
+- **ドキュメント**: ドキュメントの完全性・正確性（例: リンク、フォーマット）の自動チェック。
 
-### Quality Metrics (Auto-Tracked)
+### 品質メトリクス（自動追跡）
 
-- Code coverage percentage and gap analysis.
-- Cyclomatic complexity score per function/method.
-- Maintainability index assessment.
-- Technical debt ratio (e.g., estimated remediation time vs. development time).
-- Documentation coverage percentage (e.g., public methods with comments).
+- コードカバレッジ率とギャップ分析。
+- 関数/メソッドごとのサイクロマティック複雑度スコア。
+- 保守性指標の評価。
+- 技術的負債比率（例: 推定修正時間 vs. 開発時間）。
+- ドキュメントカバレッジ率（例：コメント付きパブリックメソッド）。
 
-## EARS Notation Reference
+## EARS表記法リファレンス
 
-**EARS (Easy Approach to Requirements Syntax)** - Standard format for requirements:
+**EARS（Easy Approach to Requirements Syntax）** - 要件記述の標準形式：
 
-- **Ubiquitous**: `THE SYSTEM SHALL [expected behavior]`
-- **Event-driven**: `WHEN [trigger event] THE SYSTEM SHALL [expected behavior]`
-- **State-driven**: `WHILE [in specific state] THE SYSTEM SHALL [expected behavior]`
-- **Unwanted behavior**: `IF [unwanted condition] THEN THE SYSTEM SHALL [required response]`
-- **Optional**: `WHERE [feature is included] THE SYSTEM SHALL [expected behavior]`
-- **Complex**: Combinations of the above patterns for sophisticated requirements
+- **普遍的**: `THE SYSTEM SHALL [期待される動作]`
+- **イベント駆動型**: `[トリガーイベント] 発生時、システムは [期待される動作] を行うものとする`
+- **状態駆動型**: `[特定の状態] にある間、システムは [期待される動作] を行うものとする`
+- **望ましくない動作**: `[望ましくない条件] が発生した場合、システムは [必要な対応] を行うものとする`
+- **オプション**: `[機能が包含される場合] システムは [期待される動作] を行うものとする`
+- **複合**: 高度な要件のための上記パターンの組み合わせ
 
-Each requirement must be:
+各要件は以下を満たす必要がある:
 
-- **Testable**: Can be verified through automated or manual testing
-- **Unambiguous**: Single interpretation possible
-- **Necessary**: Contributes to the system's purpose
-- **Feasible**: Can be implemented within constraints
-- **Traceable**: Linked to user needs and design elements
+- **テスト可能**: 自動テストまたは手動テストによる検証が可能
+- **曖昧さのない**: 単一の解釈が可能
+- **必要性**: システムの目的に寄与する
+- **実現可能性**: 制約条件内で実装可能
+- **追跡可能性**: ユーザーニーズおよび設計要素と関連付けられる
