@@ -1,84 +1,84 @@
 ---
 mode: 'agent'
-description: 'Ensure .NET/C# code meets best practices for the solution/project.'
+description: '.NET/C# コードがこのソリューション/プロジェクトのベストプラクティスに適合しているかを確認します。'
 ---
-# .NET/C# Best Practices
+# .NET/C# ベストプラクティス
 
-Your task is to ensure .NET/C# code in ${selection} meets the best practices specific to this solution/project. This includes:
+${selection} の .NET/C# コードが、このソリューション/プロジェクト特有のベストプラクティスに従っているかを確認し、改善します。対象は以下を含みます。
 
-## Documentation & Structure
+## ドキュメントと構造
 
-- Create comprehensive XML documentation comments for all public classes, interfaces, methods, and properties
-- Include parameter descriptions and return value descriptions in XML comments
-- Follow the established namespace structure: {Core|Console|App|Service}.{Feature}
+- すべての public クラス/インターフェース/メソッド/プロパティに XML ドキュメントコメントを付与
+- パラメータと戻り値の説明を XML コメントに含める
+- 既定の名前空間規約 `{Core|Console|App|Service}.{Feature}` に従う
 
-## Design Patterns & Architecture
+## デザインパターンとアーキテクチャ
 
-- Use primary constructor syntax for dependency injection (e.g., `public class MyClass(IDependency dependency)`)
-- Implement the Command Handler pattern with generic base classes (e.g., `CommandHandler<TOptions>`)
-- Use interface segregation with clear naming conventions (prefix interfaces with 'I')
-- Follow the Factory pattern for complex object creation.
+- 依存性注入にはプライマリコンストラクター構文（例: `public class MyClass(IDependency dependency)`）を使用
+- ジェネリック基底クラスによる Command Handler パターン（例: `CommandHandler<TOptions>`）を実装
+- インターフェース分離と明確な命名規則（I 接頭辞）
+- 複雑なオブジェクト生成には Factory パターンを適用
 
-## Dependency Injection & Services
+## 依存性注入とサービス
 
-- Use constructor dependency injection with null checks via ArgumentNullException
-- Register services with appropriate lifetimes (Singleton, Scoped, Transient)
-- Use Microsoft.Extensions.DependencyInjection patterns
-- Implement service interfaces for testability
+- コンストラクターDIと `ArgumentNullException` による null チェック
+- ライフタイムに応じてサービス登録（Singleton/Scoped/Transient）
+- Microsoft.Extensions.DependencyInjection のパターンを使用
+- テスタビリティのためサービスはインターフェースで抽象化
 
-## Resource Management & Localization
+## リソース管理とローカライズ
 
-- Use ResourceManager for localized messages and error strings
-- Separate LogMessages and ErrorMessages resource files
-- Access resources via `_resourceManager.GetString("MessageKey")`
+- メッセージ/エラー文言は ResourceManager を使用
+- LogMessages と ErrorMessages の .resx を分離
+- リソースアクセスは `_resourceManager.GetString("MessageKey")`
 
-## Async/Await Patterns
+## Async/Await のパターン
 
-- Use async/await for all I/O operations and long-running tasks
-- Return Task or Task<T> from async methods
-- Use ConfigureAwait(false) where appropriate
-- Handle async exceptions properly
+- すべての I/O と長時間処理は async/await を使用
+- 非同期メソッドは Task / Task<T> を返却
+- 適切な箇所では ConfigureAwait(false) を使用
+- 非同期例外を適切に処理
 
-## Testing Standards
+## テスト基準
 
-- Use MSTest framework with FluentAssertions for assertions
-- Follow AAA pattern (Arrange, Act, Assert)
-- Use Moq for mocking dependencies
-- Test both success and failure scenarios
-- Include null parameter validation tests
+- アサーションに FluentAssertions を用いた MSTest などのフレームワークを使用
+- AAA パターン（Arrange, Act, Assert）を遵守
+- 依存のモックに Moq を使用
+- 成功/失敗の両シナリオをテスト
+- null パラメータ検証のテストを含める
 
-## Configuration & Settings
+## 構成と設定
 
-- Use strongly-typed configuration classes with data annotations
-- Implement validation attributes (Required, NotEmptyOrWhitespace)
-- Use IConfiguration binding for settings
-- Support appsettings.json configuration files
+- 強く型付けされた設定クラスとデータ注釈を使用
+- 検証属性（Required, NotEmptyOrWhitespace）を実装
+- 設定は IConfiguration バインドで取り込む
+- appsettings.json に対応
 
-## Semantic Kernel & AI Integration
+## Semantic Kernel と AI 連携
 
-- Use Microsoft.SemanticKernel for AI operations
-- Implement proper kernel configuration and service registration
-- Handle AI model settings (ChatCompletion, Embedding, etc.)
-- Use structured output patterns for reliable AI responses
+- AI 処理に Microsoft.SemanticKernel を使用
+- 適切なカーネル構成とサービス登録を実装
+- モデル設定（ChatCompletion, Embedding など）を取り扱う
+- 構造化出力パターンで安定した AI 応答を得る
 
-## Error Handling & Logging
+## 例外処理とロギング
 
-- Use structured logging with Microsoft.Extensions.Logging
-- Include scoped logging with meaningful context
-- Throw specific exceptions with descriptive messages
-- Use try-catch blocks for expected failure scenarios
+- Microsoft.Extensions.Logging による構造化ロギング
+- 意味のあるコンテキスト付きスコープドロギング
+- 説明的メッセージを持つ特定例外を送出
+- 予期される失敗シナリオには try-catch を使用
 
-## Performance & Security
+## パフォーマンスとセキュリティ
 
-- Use C# 12+ features and .NET 8 optimizations where applicable
-- Implement proper input validation and sanitization
-- Use parameterized queries for database operations
-- Follow secure coding practices for AI/ML operations
+- 適用可能な箇所で C# 12+ と .NET 8 の最適化を活用
+- 入力の適切な検証とサニタイズ
+- データベース操作はパラメータ化クエリを使用
+- AI/ML におけるセキュアコーディングを遵守
 
-## Code Quality
+## コード品質
 
-- Ensure SOLID principles compliance
-- Avoid code duplication through base classes and utilities
-- Use meaningful names that reflect domain concepts
-- Keep methods focused and cohesive
-- Implement proper disposal patterns for resources
+- SOLID 原則の順守
+- 基底クラス・ユーティリティで重複を排除
+- ドメインを反映した意味のある命名
+- メソッドは凝集度を保ち単一責務に
+- リソースに対して適切な破棄パターンを実装

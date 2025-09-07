@@ -1,24 +1,24 @@
 ---
 mode: 'agent'
-description: 'Create GitHub Pull Request for feature request from specification file using pull_request_template.md template.'
+description: '仕様ファイルに基づく機能要望の GitHub Pull Request を、pull_request_template.md を用いて作成します。'
 tools: ['codebase', 'search', 'github', 'create_pull_request', 'update_pull_request', 'get_pull_request_diff']
 ---
-# Create GitHub Pull Request from Specification
+# 仕様から GitHub Pull Request を作成
 
-Create GitHub Pull Request for the specification at `${workspaceFolder}/.github/pull_request_template.md` .
+`${workspaceFolder}/.github/pull_request_template.md` に基づき、仕様のための Pull Request を作成します。
 
-## Process
+## 手順
 
-1. Analyze specification file template from '${workspaceFolder}/.github/pull_request_template.md' to extract requirements by 'search' tool.
-2. Create pull request draft template by using 'create_pull_request' tool on to `${input:targetBranch}`. and make sure don't have any pull request of current branch was exist `get_pull_request`. If has continue to step 4, and skip step 3.
-3. Get changes in pull request by using 'get_pull_request_diff' tool to analyze information that was changed in pull Request.
-4. Update the pull request body and title created in the previous step using the 'update_pull_request' tool. Incorporate the information from the template obtained in the first step to update the body and title as needed.
-5. Switch from draft to ready for review by using 'update_pull_request' tool. To update state of pull request.
-6. Using 'get_me' to get username of person was created pull request and assign to `update_issue` tool. To assign pull request
-7. Response URL Pull request was create to user.
+1. 'search' ツールで `${workspaceFolder}/.github/pull_request_template.md` のテンプレートを解析し、必要情報を抽出。
+2. 'create_pull_request' ツールで `${input:targetBranch}` にドラフト PR を作成。既に同ブランチの PR があるか `get_pull_request` で確認し、存在する場合は手順4へ（手順3はスキップ）。
+3. 'get_pull_request_diff' ツールで PR の変更点を取得・分析。
+4. 'update_pull_request' ツールで本文とタイトルを更新。手順1で取得したテンプレート情報を反映。
+5. 'update_pull_request' ツールでドラフトからレビュー可状態へ切り替え。
+6. 'get_me' で PR 作成者のユーザー名を取得し、`update_issue` ツールでアサイン。
+7. 作成された PR の URL をユーザーに返す。
 
-## Requirements
-- Single pull request for the complete specification
-- Clear title/pull_request_template.md identifying the specification
-- Fill enough information into pull_request_template.md
-- Verify against existing pull requests before creation
+## 要件
+- 仕様全体につき PR は1件
+- 仕様を特定できる明確なタイトル/pull_request_template.md
+- pull_request_template.md に必要情報を十分に記載
+- 作成前に既存 PR と重複しないことを確認

@@ -1,25 +1,25 @@
 ---
 mode: 'agent'
-description: 'Create a formal specification for an existing GitHub Actions CI/CD workflow, optimized for AI consumption and workflow maintenance.'
+description: '既存の GitHub Actions CI/CD ワークフローの正式な仕様を作成します。AI による活用とワークフロー保守に最適化されています。'
 tools: ['changes', 'codebase', 'editFiles', 'extensions', 'fetch', 'findTestFiles', 'githubRepo', 'new', 'openSimpleBrowser', 'problems', 'runCommands', 'runInTerminal2', 'runNotebooks', 'runTasks', 'runTests', 'search', 'searchResults', 'terminalLastCommand', 'terminalSelection', 'testFailure', 'usages', 'vscodeAPI', 'microsoft.docs.mcp', 'github', 'Microsoft Docs']
 ---
-# Create GitHub Actions Workflow Specification
+# GitHub Actions ワークフロー仕様の作成
 
-Create a comprehensive specification for the GitHub Actions workflow: `${input:WorkflowFile}`.
+`${input:WorkflowFile}` の GitHub Actions ワークフローについて、包括的な仕様を作成してください。
 
-This specification serves as a specification for the workflow's behavior, requirements, and constraints. It must be implementation-agnostic, focusing on **what** the workflow accomplishes rather than **how** it's implemented.
+この仕様は、ワークフローの振る舞い・要件・制約を定義するものです。実装非依存であること（「どのように」ではなく「何を」達成するかに集中）を厳守してください。
 
-## AI-Optimized Requirements
+## AI 最適化要件
 
-- **Token Efficiency**: Use concise language without sacrificing clarity
-- **Structured Data**: Leverage tables, lists, and diagrams for dense information
-- **Semantic Clarity**: Use precise terminology consistently throughout
-- **Implementation Abstraction**: Avoid specific syntax, commands, or tool versions
-- **Maintainability**: Design for easy updates as workflow evolves
+- トークン効率: 簡潔さを保ちつつ、明瞭さを損なわない
+- 構造化データ: 表、箇条書き、図を活用して情報密度を高める
+- セマンティック一貫性: 用語を正確かつ継続的に使用する
+- 実装抽象化: 具体的な構文・コマンド・ツールバージョンは避ける
+- 保守性: 進化に合わせて容易に更新できる設計にする
 
-## Specification Template
+## 仕様テンプレート
 
-Save as: `/spec/spec-process-cicd-[workflow-name].md`
+保存先: `/spec/spec-process-cicd-[workflow-name].md`
 
 ```md
 ---
@@ -31,13 +31,13 @@ owner: DevOps Team
 tags: [process, cicd, github-actions, automation, [domain-specific-tags]]
 ---
 
-## Workflow Overview
+## ワークフロー概要
 
-**Purpose**: [One sentence describing workflow's primary goal]
-**Trigger Events**: [List trigger conditions]
-**Target Environments**: [Environment scope]
+**目的**: [ワークフローの主目的を1文で]
+**トリガーイベント**: [トリガー条件の一覧]
+**対象環境**: [適用スコープ]
 
-## Execution Flow Diagram
+## 実行フローダイアグラム
 
 ```mermaid
 graph TD
@@ -53,198 +53,198 @@ graph TD
     style E fill:#e8f5e8
 ```
 
-## Jobs & Dependencies
+## ジョブと依存関係
 
-| Job Name | Purpose | Dependencies | Execution Context |
-|----------|---------|--------------|-------------------|
-| job-1 | [Purpose] | [Prerequisites] | [Runner/Environment] |
-| job-2 | [Purpose] | job-1 | [Runner/Environment] |
+| ジョブ名 | 目的 | 依存関係 | 実行コンテキスト |
+|----------|------|----------|-------------------|
+| job-1 | [目的] | [前提条件] | [Runner/Environment] |
+| job-2 | [目的] | job-1 | [Runner/Environment] |
 
-## Requirements Matrix
+## 要件マトリクス
 
-### Functional Requirements
-| ID | Requirement | Priority | Acceptance Criteria |
-|----|-------------|----------|-------------------|
-| REQ-001 | [Requirement] | High | [Testable criteria] |
-| REQ-002 | [Requirement] | Medium | [Testable criteria] |
+### 機能要件
+| ID | 要件 | 優先度 | 受け入れ基準 |
+|----|------|--------|----------------|
+| REQ-001 | [要件] | High | [検証可能な基準] |
+| REQ-002 | [要件] | Medium | [検証可能な基準] |
 
-### Security Requirements
-| ID | Requirement | Implementation Constraint |
-|----|-------------|---------------------------|
-| SEC-001 | [Security requirement] | [Constraint description] |
+### セキュリティ要件
+| ID | 要件 | 実装上の制約 |
+|----|------|--------------|
+| SEC-001 | [セキュリティ要件] | [制約の説明] |
 
-### Performance Requirements
-| ID | Metric | Target | Measurement Method |
-|----|-------|--------|-------------------|
-| PERF-001 | [Metric] | [Target value] | [How measured] |
+### パフォーマンス要件
+| ID | 指標 | 目標 | 測定方法 |
+|----|------|------|----------|
+| PERF-001 | [メトリック] | [目標値] | [測定方法] |
 
-## Input/Output Contracts
+## 入出力コントラクト
 
-### Inputs
-
-```yaml
-# Environment Variables
-ENV_VAR_1: string  # Purpose: [description]
-ENV_VAR_2: secret  # Purpose: [description]
-
-# Repository Triggers
-paths: [list of path filters]
-branches: [list of branch patterns]
-```
-
-### Outputs
+### 入力
 
 ```yaml
-# Job Outputs
-job_1_output: string  # Description: [purpose]
-build_artifact: file  # Description: [content type]
+# 環境変数
+ENV_VAR_1: string  # 目的: [説明]
+ENV_VAR_2: secret  # 目的: [説明]
+
+# リポジトリトリガー
+paths: [パスフィルターの一覧]
+branches: [ブランチパターンの一覧]
 ```
 
-### Secrets & Variables
+### 出力
 
-| Type | Name | Purpose | Scope |
-|------|------|---------|-------|
-| Secret | SECRET_1 | [Purpose] | Workflow |
-| Variable | VAR_1 | [Purpose] | Repository |
+```yaml
+# ジョブ出力
+job_1_output: string  # 説明: [目的]
+build_artifact: file  # 説明: [内容の種類]
+```
 
-## Execution Constraints
+### シークレットと変数
 
-### Runtime Constraints
+| 種別 | 名称 | 目的 | スコープ |
+|------|------|------|----------|
+| Secret | SECRET_1 | [目的] | Workflow |
+| Variable | VAR_1 | [目的] | Repository |
 
-- **Timeout**: [Maximum execution time]
-- **Concurrency**: [Parallel execution limits]
-- **Resource Limits**: [Memory/CPU constraints]
+## 実行制約
 
-### Environmental Constraints
+### ランタイム制約
 
-- **Runner Requirements**: [OS/hardware needs]
-- **Network Access**: [External connectivity needs]
-- **Permissions**: [Required access levels]
+- タイムアウト: [最大実行時間]
+- 併行実行: [並列実行の上限]
+- リソース制限: [メモリ/CPU 制約]
 
-## Error Handling Strategy
+### 環境制約
 
-| Error Type | Response | Recovery Action |
-|------------|----------|-----------------|
-| Build Failure | [Response] | [Recovery steps] |
-| Test Failure | [Response] | [Recovery steps] |
-| Deployment Failure | [Response] | [Recovery steps] |
+- ランナー要件: [OS/ハードウェア要件]
+- ネットワークアクセス: [外部接続の必要性]
+- 権限: [必要なアクセスレベル]
 
-## Quality Gates
+## エラーハンドリング戦略
 
-### Gate Definitions
+| エラー種別 | 応答 | 復旧アクション |
+|------------|------|-----------------|
+| ビルド失敗 | [応答] | [復旧手順] |
+| テスト失敗 | [応答] | [復旧手順] |
+| デプロイ失敗 | [応答] | [復旧手順] |
 
-| Gate | Criteria | Bypass Conditions |
-|------|----------|-------------------|
-| Code Quality | [Standards] | [When allowed] |
-| Security Scan | [Thresholds] | [When allowed] |
-| Test Coverage | [Percentage] | [When allowed] |
+## クオリティゲート
 
-## Monitoring & Observability
+### ゲート定義
 
-### Key Metrics
+| ゲート | 基準 | 迂回条件 |
+|--------|------|----------|
+| コード品質 | [基準] | [許容条件] |
+| セキュリティスキャン | [閾値] | [許容条件] |
+| テストカバレッジ | [割合] | [許容条件] |
 
-- **Success Rate**: [Target percentage]
-- **Execution Time**: [Target duration]
-- **Resource Usage**: [Monitoring approach]
+## モニタリングと可観測性
 
-### Alerting
+### 主要メトリクス
 
-| Condition | Severity | Notification Target |
-|-----------|----------|-------------------|
-| [Condition] | [Level] | [Who/Where] |
+- 成功率: [目標割合]
+- 実行時間: [目標時間]
+- リソース使用率: [監視アプローチ]
 
-## Integration Points
+### アラーティング
 
-### External Systems
+| 条件 | 重要度 | 通知先 |
+|------|--------|--------|
+| [条件] | [レベル] | [対象/場所] |
 
-| System | Integration Type | Data Exchange | SLA Requirements |
-|--------|------------------|---------------|------------------|
+## 連携ポイント
+
+### 外部システム
+
+| システム | 連携種別 | データ交換 | SLA 要件 |
+|----------|----------|------------|----------|
 | [System] | [Type] | [Data format] | [Requirements] |
 
-### Dependent Workflows
+### 依存ワークフロー
 
-| Workflow | Relationship | Trigger Mechanism |
-|----------|--------------|-------------------|
+| ワークフロー | 関係 | トリガー方式 |
+|--------------|------|--------------|
 | [Workflow] | [Type] | [How triggered] |
 
-## Compliance & Governance
+## コンプライアンスとガバナンス
 
-### Audit Requirements
+### 監査要件
 
-- **Execution Logs**: [Retention policy]
-- **Approval Gates**: [Required approvals]
-- **Change Control**: [Update process]
+- 実行ログ: [保持方針]
+- 承認ゲート: [必要な承認]
+- 変更管理: [更新プロセス]
 
-### Security Controls
+### セキュリティコントロール
 
-- **Access Control**: [Permission model]
-- **Secret Management**: [Rotation policy]
-- **Vulnerability Scanning**: [Scan frequency]
+- アクセス制御: [権限モデル]
+- シークレット管理: [ローテーション方針]
+- 脆弱性スキャン: [実施頻度]
 
-## Edge Cases & Exceptions
+## エッジケースと例外
 
-### Scenario Matrix
+### シナリオマトリクス
 
-| Scenario | Expected Behavior | Validation Method |
-|----------|-------------------|-------------------|
-| [Edge case] | [Behavior] | [How to verify] |
+| シナリオ | 期待動作 | 検証方法 |
+|----------|----------|----------|
+| [エッジケース] | [動作] | [検証方法] |
 
-## Validation Criteria
+## 検証基準
 
-### Workflow Validation
+### ワークフロー検証
 
-- **VLD-001**: [Validation rule]
-- **VLD-002**: [Validation rule]
+- VLD-001: [検証ルール]
+- VLD-002: [検証ルール]
 
-### Performance Benchmarks
+### パフォーマンス指標
 
-- **PERF-001**: [Benchmark criteria]
-- **PERF-002**: [Benchmark criteria]
+- PERF-001: [ベンチマーク基準]
+- PERF-002: [ベンチマーク基準]
 
-## Change Management
+## 変更管理
 
-### Update Process
+### 更新プロセス
 
-1. **Specification Update**: Modify this document first
-2. **Review & Approval**: [Approval process]
-3. **Implementation**: Apply changes to workflow
-4. **Testing**: [Validation approach]
-5. **Deployment**: [Release process]
+1. 仕様更新: まず本書を更新する
+2. レビューと承認: [承認プロセス]
+3. 実装: ワークフローへ変更を適用
+4. テスト: [検証アプローチ]
+5. デプロイ: [リリース手順]
 
-### Version History
+### バージョン履歴
 
 | Version | Date | Changes | Author |
 |---------|------|---------|--------|
 | 1.0 | [Date] | Initial specification | [Author] |
 
-## Related Specifications
+## 関連仕様
 
-- [Link to related workflow specs]
-- [Link to infrastructure specs]
-- [Link to deployment specs]
+- [関連ワークフロー仕様へのリンク]
+- [インフラ仕様へのリンク]
+- [デプロイ仕様へのリンク]
 
 ```
 
-## Analysis Instructions
+## 解析手順
 
-When analyzing the workflow file:
+ワークフローファイルを解析する際は、以下に従ってください。
 
-1. **Extract Core Purpose**: Identify the primary business objective
-2. **Map Job Flow**: Create dependency graph showing execution order
-3. **Identify Contracts**: Document inputs, outputs, and interfaces
-4. **Capture Constraints**: Extract timeouts, permissions, and limits
-5. **Define Quality Gates**: Identify validation and approval points
-6. **Document Error Paths**: Map failure scenarios and recovery
-7. **Abstract Implementation**: Focus on behavior, not syntax
+1. 主要目的の抽出: ビジネス上の主目的を特定
+2. ジョブフローのマッピング: 実行順序を示す依存関係グラフの作成
+3. コントラクトの特定: 入力・出力・インターフェイスの文書化
+4. 制約の把握: タイムアウト・権限・リソース制限の抽出
+5. クオリティゲート定義: 検証点と承認点の特定
+6. エラーパスの文書化: 失敗シナリオと復旧手順のマッピング
+7. 実装抽象化: 構文ではなく振る舞いに着目
 
-## Mermaid Diagram Guidelines
+## Mermaid 図のガイドライン
 
-### Flow Types
-- **Sequential**: `A --> B --> C`
-- **Parallel**: `A --> B & A --> C; B --> D & C --> D`
-- **Conditional**: `A --> B{Decision}; B -->|Yes| C; B -->|No| D`
+### フロー種別
+- 直列: `A --> B --> C`
+- 並列: `A --> B & A --> C; B --> D & C --> D`
+- 分岐: `A --> B{Decision}; B -->|Yes| C; B -->|No| D`
 
-### Styling
+### スタイリング
 ```mermaid
 style TriggerNode fill:#e1f5fe
 style SuccessNode fill:#e8f5e8
@@ -252,8 +252,8 @@ style FailureNode fill:#ffebee
 style ProcessNode fill:#f3e5f5
 ```
 
-### Complex Workflows
-For workflows with 5+ jobs, use subgraphs:
+### 複雑なワークフロー
+5 つ以上のジョブがある場合はサブグラフを使用:
 ```mermaid
 graph TD
     subgraph "Build Phase"
@@ -265,12 +265,12 @@ graph TD
     C --> D
 ```
 
-## Token Optimization Strategies
+## トークン最適化戦略
 
-1. **Use Tables**: Dense information in structured format
-2. **Abbreviate Consistently**: Define once, use throughout
-3. **Bullet Points**: Avoid prose paragraphs
-4. **Code Blocks**: Structured data over narrative
-5. **Cross-Reference**: Link instead of repeat information
+1. 表の活用: 構造化により情報密度を高める
+2. 略語の一貫使用: 一度定義し、以後使い回す
+3. 箇条書き: 散文ではなくポイントで記述
+4. コードブロック: 物語ではなく構造化データを優先
+5. 参照: 繰り返しではなくリンクで連携
 
-Focus on creating a specification that serves as both documentation and a template for workflow updates.
+この仕様は、ドキュメントであると同時にワークフロー更新のテンプレートとして機能することを目指してください。

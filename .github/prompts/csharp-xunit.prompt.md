@@ -1,69 +1,69 @@
 ---
 mode: 'agent'
 tools: ['changes', 'codebase', 'editFiles', 'problems', 'search']
-description: 'Get best practices for XUnit unit testing, including data-driven tests'
+description: 'データ駆動テストを含む XUnit の単体テストに関するベストプラクティスを取得します'
 ---
 
-# XUnit Best Practices
+# XUnit のベストプラクティス
 
-Your goal is to help me write effective unit tests with XUnit, covering both standard and data-driven testing approaches.
+XUnit を用いた効果的な単体テストの作成を支援します。標準的なテストとデータ駆動テストの両方を対象とします。
 
-## Project Setup
+## プロジェクトセットアップ
 
-- Use a separate test project with naming convention `[ProjectName].Tests`
-- Reference Microsoft.NET.Test.Sdk, xunit, and xunit.runner.visualstudio packages
-- Create test classes that match the classes being tested (e.g., `CalculatorTests` for `Calculator`)
-- Use .NET SDK test commands: `dotnet test` for running tests
+- テストプロジェクトは `[ProjectName].Tests` の命名規則で分離
+- Microsoft.NET.Test.Sdk、xunit、xunit.runner.visualstudio パッケージを参照
+- テスト対象クラスに対応するテストクラスを作成（例: `Calculator` に対して `CalculatorTests`）
+- .NET SDK のテストコマンドを使用（実行は `dotnet test`）
 
-## Test Structure
+## テスト構造
 
-- No test class attributes required (unlike MSTest/NUnit)
-- Use fact-based tests with `[Fact]` attribute for simple tests
-- Follow the Arrange-Act-Assert (AAA) pattern
-- Name tests using the pattern `MethodName_Scenario_ExpectedBehavior`
-- Use constructor for setup and `IDisposable.Dispose()` for teardown
-- Use `IClassFixture<T>` for shared context between tests in a class
-- Use `ICollectionFixture<T>` for shared context between multiple test classes
+- MSTest/NUnit と異なり、テストクラス属性は不要
+- 単純なテストは `[Fact]` を使用
+- Arrange-Act-Assert (AAA) パターンに従う
+- テスト名は `MethodName_Scenario_ExpectedBehavior` のパターン
+- セットアップはコンストラクター、後処理は `IDisposable.Dispose()`
+- クラス内の共有コンテキストは `IClassFixture<T>` を使用
+- 複数クラス間の共有コンテキストは `ICollectionFixture<T>` を使用
 
-## Standard Tests
+## 標準テスト
 
-- Keep tests focused on a single behavior
-- Avoid testing multiple behaviors in one test method
-- Use clear assertions that express intent
-- Include only the assertions needed to verify the test case
-- Make tests independent and idempotent (can run in any order)
-- Avoid test interdependencies
+- テストは単一の振る舞いに集中
+- 1つのテストメソッドで複数の振る舞いを検証しない
+- 意図が伝わる明確なアサーションを使用
+- 検証に必要な最小限のアサーションのみを含める
+- テストは独立かつ順序に依存しない（どの順でも通る）
+- テスト間の相互依存を避ける
 
-## Data-Driven Tests
+## データ駆動テスト
 
-- Use `[Theory]` combined with data source attributes
-- Use `[InlineData]` for inline test data
-- Use `[MemberData]` for method-based test data
-- Use `[ClassData]` for class-based test data
-- Create custom data attributes by implementing `DataAttribute`
-- Use meaningful parameter names in data-driven tests
+- `[Theory]` と各種データ属性を組み合わせる
+- `InlineData` でインラインのテストデータ
+- `MemberData` でメソッド由来のテストデータ
+- `ClassData` でクラス由来のテストデータ
+- `DataAttribute` を実装してカスタムデータ属性を作成可能
+- 意味のあるパラメータ名を使用
 
-## Assertions
+## アサーション
 
-- Use `Assert.Equal` for value equality
-- Use `Assert.Same` for reference equality
-- Use `Assert.True`/`Assert.False` for boolean conditions
-- Use `Assert.Contains`/`Assert.DoesNotContain` for collections
-- Use `Assert.Matches`/`Assert.DoesNotMatch` for regex pattern matching
-- Use `Assert.Throws<T>` or `await Assert.ThrowsAsync<T>` to test exceptions
-- Use fluent assertions library for more readable assertions
+- 値の等価は `Assert.Equal`
+- 参照の等価は `Assert.Same`
+- 真偽の検証は `Assert.True`/`Assert.False`
+- コレクションは `Assert.Contains`/`Assert.DoesNotContain`
+- 正規表現は `Assert.Matches`/`Assert.DoesNotMatch`
+- 例外検証は `Assert.Throws<T>` または `await Assert.ThrowsAsync<T>`
+- 可読性向上のため Fluent Assertions 等のライブラリの使用を検討
 
-## Mocking and Isolation
+## モックと分離
 
-- Consider using Moq or NSubstitute alongside XUnit
-- Mock dependencies to isolate units under test
-- Use interfaces to facilitate mocking
-- Consider using a DI container for complex test setups
+- XUnit と併用して Moq や NSubstitute を検討
+- 依存をモックしてテスト対象を分離
+- モック容易化のためインターフェースを活用
+- 複雑なセットアップでは DI コンテナの利用を検討
 
-## Test Organization
+## テストの整理
 
-- Group tests by feature or component
-- Use `[Trait("Category", "CategoryName")]` for categorization
-- Use collection fixtures to group tests with shared dependencies
-- Consider output helpers (`ITestOutputHelper`) for test diagnostics
-- Skip tests conditionally with `Skip = "reason"` in fact/theory attributes
+- 機能やコンポーネント単位でグルーピング
+- 分類には `[Trait("Category", "CategoryName")]` を使用
+- 共有依存にはコレクションフィクスチャを活用
+- 診断には `ITestOutputHelper` を検討
+- 条件付きスキップは `[Fact(Skip = "reason")]` / `[Theory(Skip = "reason")]` を使用

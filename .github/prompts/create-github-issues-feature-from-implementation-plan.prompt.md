@@ -1,28 +1,28 @@
 ---
 mode: 'agent'
-description: 'Create GitHub Issues from implementation plan phases using feature_request.yml or chore_request.yml templates.'
+description: '実装計画の各フェーズから GitHub Issue を作成します。feature_request.yml または chore_request.yml テンプレートを使用します。'
 tools: ['codebase', 'search', 'github', 'create_issue', 'search_issues', 'update_issue']
 ---
-# Create GitHub Issue from Implementation Plan
+# 実装計画から GitHub Issue を作成
 
-Create GitHub Issues for the implementation plan at `${file}`.
+`${file}` にある実装計画に基づき、GitHub Issue を作成してください。
 
-## Process
+## 手順
 
-1. Analyze plan file to identify phases
-2. Check existing issues using `search_issues`
-3. Create new issue per phase using `create_issue` or update existing with `update_issue`
-4. Use `feature_request.yml` or `chore_request.yml` templates (fallback to default)
+1. 計画ファイルを解析してフェーズを特定
+2. `search_issues` で既存 Issue を確認
+3. 各フェーズにつき `create_issue` で新規作成、または `update_issue` で既存を更新
+4. `feature_request.yml` または `chore_request.yml` を使用（なければデフォルトにフォールバック）
 
-## Requirements
+## 要件
 
-- One issue per implementation phase
-- Clear, structured titles and descriptions
-- Include only changes required by the plan
-- Verify against existing issues before creation
+- フェーズごとに1件の Issue
+- 明確で構造化されたタイトルと説明
+- 計画が要求する変更のみを含める
+- 作成前に既存 Issue と重複しないことを確認
 
-## Issue Content
+## Issue 内容
 
-- Title: Phase name from implementation plan
-- Description: Phase details, requirements, and context
-- Labels: Appropriate for issue type (feature/chore)
+- Title: 実装計画のフェーズ名
+- Description: フェーズの詳細、要件、背景コンテキスト
+- Labels: 課題種別に応じたラベル（feature/chore）

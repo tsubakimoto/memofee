@@ -1,55 +1,55 @@
 ---
 mode: 'agent'
-description: 'Update an existing specification file for the solution, optimized for Generative AI consumption based on new requirements or updates to any existing code.'
+description: '新要件または既存コード更新に基づき、生成AIでの活用に最適化された既存の仕様ファイルを更新します。'
 tools: ['changes', 'codebase', 'editFiles', 'extensions', 'fetch', 'githubRepo', 'openSimpleBrowser', 'problems', 'runTasks', 'search', 'searchResults', 'terminalLastCommand', 'terminalSelection', 'testFailure', 'usages', 'vscodeAPI']
 ---
-# Update Specification
+# 仕様の更新
 
-Your goal is to update the existing specification file `${file}` based on new requirements or updates to any existing code.
+新しい要件または既存コードの更新に基づき、既存の仕様ファイル `${file}` を更新してください。
 
-The specification file must define the requirements, constraints, and interfaces for the solution components in a manner that is clear, unambiguous, and structured for effective use by Generative AIs. Follow established documentation standards and ensure the content is machine-readable and self-contained.
+仕様ファイルは、ソリューションコンポーネントの要件・制約・インターフェイスを、生成AIが効果的に扱えるよう明確かつ非曖昧で構造化された形で定義してください。既定の文書標準に従い、機械可読かつ自己完結であることを保証します。
 
-## Best Practices for AI-Ready Specifications
+## AI 対応仕様のベストプラクティス
 
-- Use precise, explicit, and unambiguous language.
-- Clearly distinguish between requirements, constraints, and recommendations.
-- Use structured formatting (headings, lists, tables) for easy parsing.
-- Avoid idioms, metaphors, or context-dependent references.
-- Define all acronyms and domain-specific terms.
-- Include examples and edge cases where applicable.
-- Ensure the document is self-contained and does not rely on external context.
+- 正確・明示的・非曖昧な言語を使用
+- 要件・制約・推奨の区別を明確化
+- 見出し・リスト・表などの構造化フォーマット
+- 慣用句・比喩・文脈依存表現を避ける
+- すべての頭字語・専門用語を定義
+- 必要に応じて例やエッジケースを含める
+- 外部文脈に依存せず自己完結にする
 
-The specification should be saved in the [/spec/](/spec/) directory and named according to the following convention: `[a-z0-9-]+.md`, where the name should be descriptive of the specification's content and starting with the highlevel purpose, which is one of [schema, tool, data, infrastructure, process, architecture, or design].
+仕様は [/spec/](/spec/) ディレクトリに保存し、命名規則は `[a-z0-9-]+.md` を用います。名前は内容を表し、先頭は [schema, tool, data, infrastructure, process, architecture, design] のいずれかの高レベル目的で開始してください。
 
-The specification file must be formatted in well formed Markdown.
+仕様ファイルは整形式の Markdown で記述します。
 
-Specification files must follow the template below, ensuring that all sections are filled out appropriately. The front matter for the markdown should be structured correctly as per the example following:
+以下のテンプレートに従い、すべてのセクションを適切に更新してください。Markdown のフロントマターは次の例にならいます。
 
 ```md
 ---
-title: [Concise Title Describing the Specification's Focus]
-version: [Optional: e.g., 1.0, Date]
+title: [仕様の焦点を簡潔に示すタイトル]
+version: [任意: 例 1.0, 日付]
 date_created: [YYYY-MM-DD]
-last_updated: [Optional: YYYY-MM-DD]
-owner: [Optional: Team/Individual responsible for this spec]
-tags: [Optional: List of relevant tags or categories, e.g., `infrastructure`, `process`, `design`, `app` etc]
+last_updated: [任意: YYYY-MM-DD]
+owner: [任意: 本仕様の責任チーム/担当者]
+tags: [任意: 関連タグ（例: infrastructure, process, design, app など）]
 ---
 
 # Introduction
 
-[A short concise introduction to the specification and the goal it is intended to achieve.]
+[本仕様の概要と目的を簡潔に記述]
 
 ## 1. Purpose & Scope
 
-[Provide a clear, concise description of the specification's purpose and the scope of its application. State the intended audience and any assumptions.]
+[本仕様の目的と適用範囲、対象読者、前提などを記述]
 
 ## 2. Definitions
 
-[List and define all acronyms, abbreviations, and domain-specific terms used in this specification.]
+[頭字語・略語・専門用語を一覧・定義]
 
 ## 3. Requirements, Constraints & Guidelines
 
-[Explicitly list all requirements, constraints, rules, and guidelines. Use bullet points or tables for clarity.]
+[要件・制約・ルール・ガイドラインを明示的に列挙。箇条書きや表で明確に]
 
 - **REQ-001**: Requirement 1
 - **SEC-001**: Security Requirement 1
@@ -60,11 +60,11 @@ tags: [Optional: List of relevant tags or categories, e.g., `infrastructure`, `p
 
 ## 4. Interfaces & Data Contracts
 
-[Describe the interfaces, APIs, data contracts, or integration points. Use tables or code blocks for schemas and examples.]
+[インターフェース、API、データ契約、連携ポイントの記述。スキーマや例は表/コードブロックで]
 
 ## 5. Acceptance Criteria
 
-[Define clear, testable acceptance criteria for each requirement using Given-When-Then format where appropriate.]
+[各要件の明確でテスト可能な受け入れ基準。必要に応じ Given-When-Then を使用]
 
 - **AC-001**: Given [context], When [action], Then [expected outcome]
 - **AC-002**: The system shall [specific behavior] when [condition]
@@ -72,56 +72,56 @@ tags: [Optional: List of relevant tags or categories, e.g., `infrastructure`, `p
 
 ## 6. Test Automation Strategy
 
-[Define the testing approach, frameworks, and automation requirements.]
+[テストアプローチ、フレームワーク、自動化要件を定義]
 
 - **Test Levels**: Unit, Integration, End-to-End
-- **Frameworks**: MSTest, FluentAssertions, Moq (for .NET applications)
-- **Test Data Management**: [approach for test data creation and cleanup]
-- **CI/CD Integration**: [automated testing in GitHub Actions pipelines]
-- **Coverage Requirements**: [minimum code coverage thresholds]
-- **Performance Testing**: [approach for load and performance testing]
+- **Frameworks**: MSTest, FluentAssertions, Moq (.NET アプリ向け)
+- **Test Data Management**: [テストデータの作成/クリーンアップ]
+- **CI/CD Integration**: [GitHub Actions での自動テスト]
+- **Coverage Requirements**: [最小カバレッジ閾値]
+- **Performance Testing**: [負荷・性能テストの方針]
 
 ## 7. Rationale & Context
 
-[Explain the reasoning behind the requirements, constraints, and guidelines. Provide context for design decisions.]
+[要件・制約・ガイドラインの背景と理由、設計判断のコンテキスト]
 
 ## 8. Dependencies & External Integrations
 
-[Define the external systems, services, and architectural dependencies required for this specification. Focus on **what** is needed rather than **how** it's implemented. Avoid specific package or library versions unless they represent architectural constraints.]
+[本仕様に必要な外部システム・サービス・アーキテクチャ依存を定義。「何が必要か」に注力し、特定のパッケージ名は避ける]
 
 ### External Systems
-- **EXT-001**: [External system name] - [Purpose and integration type]
+- **EXT-001**: [外部システム名] - [目的と連携種別]
 
 ### Third-Party Services
-- **SVC-001**: [Service name] - [Required capabilities and SLA requirements]
+- **SVC-001**: [サービス名] - [必要な機能と SLA 要件]
 
 ### Infrastructure Dependencies
-- **INF-001**: [Infrastructure component] - [Requirements and constraints]
+- **INF-001**: [インフラ要素] - [要件と制約]
 
 ### Data Dependencies
-- **DAT-001**: [External data source] - [Format, frequency, and access requirements]
+- **DAT-001**: [外部データソース] - [形式、頻度、アクセス要件]
 
 ### Technology Platform Dependencies
-- **PLT-001**: [Platform/runtime requirement] - [Version constraints and rationale]
+- **PLT-001**: [プラットフォーム/ランタイム要件] - [バージョン制約と理由]
 
 ### Compliance Dependencies
-- **COM-001**: [Regulatory or compliance requirement] - [Impact on implementation]
+- **COM-001**: [規制/コンプライアンス要件] - [実装への影響]
 
-**Note**: This section should focus on architectural and business dependencies, not specific package implementations. For example, specify "OAuth 2.0 authentication library" rather than "Microsoft.AspNetCore.Authentication.JwtBearer v6.0.1".
+注: この節はアーキテクチャ/ビジネス依存に焦点を当て、特定のパッケージ実装は避けます。例: 「OAuth 2.0 認証ライブラリ」とし、特定パッケージやバージョンは挙げない。
 
 ## 9. Examples & Edge Cases
 
 ```code
-// Code snippet or data example demonstrating the correct application of the guidelines, including edge cases
+// ガイドラインの正しい適用例（エッジケースを含む）
 ```
 
 ## 10. Validation Criteria
 
-[List the criteria or tests that must be satisfied for compliance with this specification.]
+[本仕様に準拠するために満たすべき基準やテストを列挙]
 
 ## 11. Related Specifications / Further Reading
 
-[Link to related spec 1]
-[Link to relevant external documentation]
+[関連仕様へのリンク]
+[関連する外部ドキュメント]
 
 ```
