@@ -1,6 +1,179 @@
-# memofee
+# MemoFee
 
-A web app that lets you add notes to feed articles
+A personal RSS/Atom feed reader with note-taking capabilities built with .NET 8 and Blazor Web App.
+
+## Overview
+
+MemoFee allows you to:
+- Register and manage RSS/Atom feeds
+- Browse and search articles from your feeds
+- Add personal notes, tags, and stars to articles
+- Secure single-user access via Azure App Service Easy Auth
+
+## Features
+
+- **RSS/Atom Support**: Works with any standard RSS or Atom feed
+- **Personal Notes**: Add rich text notes to any article
+- **Tagging System**: Organize articles with custom tags
+- **Star Articles**: Mark important articles for easy access
+- **Search & Filter**: Find articles by title, content, tags, or feed
+- **Single User**: Designed for personal use with Azure authentication
+- **Azure Ready**: Built for deployment to Azure App Service
+
+## Technology Stack
+
+- **.NET 8**: Latest .NET framework
+- **Blazor Web App**: Server-side rendering with interactivity
+- **Entity Framework Core**: SQL Server database
+- **Azure App Service**: Hosting platform
+- **Easy Auth**: Azure App Service Authentication
+- **Bootstrap 5**: UI framework
+- **RSS/Atom Parsing**: System.ServiceModel.Syndication
+
+## Quick Start
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd memofee
+   ```
+
+2. **Build and run locally**
+   ```bash
+   dotnet build
+   dotnet run --project src/Memofee.AppHost
+   ```
+
+3. **Access the application**
+   - Open your browser to `https://localhost:5001`
+   - Add your first RSS/Atom feed
+   - Start browsing and noting articles
+
+## Configuration
+
+### Database
+
+The application uses SQL Server with Entity Framework Core. Update the connection string in `appsettings.json`:
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=MemoFee;Trusted_Connection=true;MultipleActiveResultSets=true"
+  }
+}
+```
+
+### Authentication
+
+For single-user access, configure the allowed user:
+
+```json
+{
+  "ALLOWED_UPN": "your-email@domain.com",
+  "ALLOWED_OID": "your-azure-object-id"
+}
+```
+
+**Environment Variables for Production:**
+- `ALLOWED_UPN`: User Principal Name (email) of the authorized user
+- `ALLOWED_OID`: Azure AD Object ID of the authorized user (alternative to UPN)
+- `ConnectionStrings__DefaultConnection`: Database connection string
+
+### Azure Deployment
+
+1. **Create Azure Resources**:
+   - Azure App Service (Linux recommended)
+   - Azure SQL Database
+   - Enable App Service Authentication
+
+2. **Configure App Service Authentication**:
+   - Enable Microsoft account or Azure AD authentication
+   - Configure redirect URLs
+
+3. **Set Application Settings**:
+   - `ALLOWED_UPN` or `ALLOWED_OID`: Your authorized user identifier
+   - `ConnectionStrings__DefaultConnection`: Azure SQL connection string
+
+4. **Deploy**:
+   ```bash
+   dotnet publish -c Release
+   # Deploy to Azure App Service
+   ```
+
+## API Endpoints
+
+### Feeds
+- `GET /api/feeds` - List all feeds
+- `POST /api/feeds` - Add new feed
+- `DELETE /api/feeds/{id}` - Delete feed
+- `POST /api/feeds/{id}/refresh` - Refresh feed
+
+### Articles
+- `GET /api/articles` - List articles (with search/filter)
+- `GET /api/articles/{id}` - Get article details
+
+### Notes
+- `GET /api/articles/{articleId}/notes` - Get notes for article
+- `PUT /api/articles/{articleId}/notes` - Create/update note
+- `DELETE /api/articles/{articleId}/notes/{noteId}` - Delete note
+
+## Development
+
+### Prerequisites
+- .NET 8 SDK
+- SQL Server (LocalDB for development)
+- Visual Studio 2022 or VS Code
+
+### Project Structure
+```
+src/
+├── Memofee/                 # Main Blazor Web App
+│   ├── Components/          # Blazor components
+│   ├── Data/               # Entity Framework DbContext
+│   ├── Models/             # Data models
+│   ├── Services/           # Business logic services
+│   └── Dtos/               # Data transfer objects
+├── Memofee.Client/         # Blazor WebAssembly client
+├── Memofee.AppHost/        # .NET Aspire orchestrator
+└── Memofee.ServiceDefaults/ # Shared configurations
+
+tests/
+├── Memofee.Tests/          # Unit tests
+└── Memofee.AppHost.Tests/  # Integration tests
+```
+
+### Database Migrations
+
+```bash
+# Add migration
+dotnet ef migrations add InitialCreate --project src/Memofee
+
+# Update database
+dotnet ef database update --project src/Memofee
+```
+
+## Security
+
+- **Single User Access**: Application enforces single-user access via UPN/OID validation
+- **HTTPS Only**: All communication forced over HTTPS
+- **Azure Authentication**: Leverages Azure App Service Easy Auth
+- **No PII Storage**: Minimal personal information stored beyond authentication
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+---
+
+Built with ❤️ using .NET 8 and Blazor
 
 ---
 
