@@ -1,0 +1,287 @@
+@page "/articles"
+@using Memofee.Dtos
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<PageTitle>Articles - MemoFee</PageTitle>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Articles</h1>
+                <a href="/feeds" class="btn btn-outline-primary">
+                    <i class="bi bi-rss"></i> Manage Feeds
+                </a>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search articles..." 
+                               @bind="searchQuery" @onkeypress="OnSearchKeyPress" />
+                        <button class="btn btn-outline-secondary" @onclick="SearchArticles">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" @bind="starredFilter" @bind:after="OnFilterChanged">
+                        <option value="">All Articles</option>
+                        <option value="true">Starred Only</option>
+                        <option value="false">Not Starred</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" @bind="selectedFeedId" @bind:after="OnFilterChanged">
+                        <option value="">All Feeds</option>
+                        @foreach (var feed in feeds)
+                        {
+                            <option value="@feed.Id">@(feed.Title ?? feed.Url)</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            @if (isLoading)
+            {
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            }
+            else if (articlesResponse?.Articles?.Any() == true)
+            {
+                <div class="row">
+                    @foreach (var article in articlesResponse.Articles)
+                    {
+                        <div class="col-12 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <h5 class="card-title">
+                                                <a href="@article.LinkUrl" target="_blank" class="text-decoration-none">
+                                                    @article.Title
+                                                    <i class="bi bi-box-arrow-up-right ms-1"></i>
+                                                </a>
+                                            </h5>
+                                            @if (!string.IsNullOrEmpty(article.Summary))
+                                            {
+                                                <p class="card-text">@article.Summary</p>
+                                            }
+                                            <div class="d-flex flex-wrap gap-2 mb-2">
+                                                @if (article.Tags.Any())
+                                                {
+                                                    @foreach (var tag in article.Tags.Take(5))
+                                                    {
+                                                        <span class="badge bg-secondary">@tag</span>
+                                                    }
+                                                    @if (article.Tags.Length > 5)
+                                                    {
+                                                        <span class="badge bg-light text-dark">+@(article.Tags.Length - 5) more</span>
+                                                    }
+                                                }
+                                            </div>
+                                            <small class="text-muted">
+                                                @if (article.PublishedAt.HasValue)
+                                                {
+                                                    <span>Published: @article.PublishedAt.Value.ToString("MMM dd, yyyy")</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>Fetched: @article.FetchedAt.ToString("MMM dd, yyyy")</span>
+                                                }
+                                                @if (!string.IsNullOrEmpty(article.Author))
+                                                {
+                                                    <span> | By: @article.Author</span>
+                                                }
+                                            </small>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="d-flex flex-column gap-2">
+                                                @if (article.Starred)
+                                                {
+                                                    <span class="badge bg-warning text-dark">
+                                                        <i class="bi bi-star-fill"></i> Starred
+                                                    </span>
+                                                }
+                                                @if (article.HasNotes)
+                                                {
+                                                    <span class="badge bg-info">
+                                                        <i class="bi bi-journal-text"></i> Has Notes
+                                                    </span>
+                                                }
+                                                <button class="btn btn-sm btn-outline-primary" @onclick="() => ViewNotes(article.Id)">
+                                                    <i class="bi bi-journal-plus"></i> @(article.HasNotes ? "Edit Notes" : "Add Notes")
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Pagination -->
+                @if (articlesResponse.TotalCount > articlesResponse.PageSize)
+                {
+                    <nav aria-label="Articles pagination">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item @(currentPage <= 1 ? "disabled" : "")">
+                                <button class="page-link" @onclick="() => LoadPage(currentPage - 1)" disabled="@(currentPage <= 1)">
+                                    Previous
+                                </button>
+                            </li>
+
+                            @{
+                                var totalPages = (int)Math.Ceiling((double)articlesResponse.TotalCount / articlesResponse.PageSize);
+                                var startPage = Math.Max(1, currentPage - 2);
+                                var endPage = Math.Min(totalPages, currentPage + 2);
+                            }
+
+                            @for (var page = startPage; page <= endPage; page++)
+                            {
+                                var pageNumber = page;
+                                <li class="page-item @(currentPage == pageNumber ? "active" : "")">
+                                    <button class="page-link" @onclick="() => LoadPage(pageNumber)">
+                                        @pageNumber
+                                    </button>
+                                </li>
+                            }
+
+                            <li class="page-item @(currentPage >= totalPages ? "disabled" : "")">
+                                <button class="page-link" @onclick="() => LoadPage(currentPage + 1)" disabled="@(currentPage >= totalPages)">
+                                    Next
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                }
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-journal display-1 text-muted"></i>
+                    <h3 class="mt-3">No articles found</h3>
+                    <p class="text-muted">
+                        @if (string.IsNullOrEmpty(searchQuery) && string.IsNullOrEmpty(selectedFeedId))
+                        {
+                            <span>Add some feeds to start collecting articles.</span>
+                        }
+                        else
+                        {
+                            <span>Try adjusting your search or filter criteria.</span>
+                        }
+                    </p>
+                    @if (!feeds.Any())
+                    {
+                        <a href="/feeds" class="btn btn-primary">Add Your First Feed</a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<FeedResponse> feeds = new();
+    private ArticlesResponse? articlesResponse;
+    private bool isLoading = true;
+    private string searchQuery = string.Empty;
+    private string starredFilter = string.Empty;
+    private string selectedFeedId = string.Empty;
+    private int currentPage = 1;
+    private const int pageSize = 20;
+
+    public class ArticlesResponse
+    {
+        public List<ArticleResponse> Articles { get; set; } = new();
+        public int TotalCount { get; set; }
+        public int Page { get; set; }
+        public int PageSize { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadFeeds();
+        await LoadArticles();
+    }
+
+    private async Task LoadFeeds()
+    {
+        try
+        {
+            var response = await Http.GetFromJsonAsync<List<FeedResponse>>("/api/feeds");
+            feeds = response ?? new List<FeedResponse>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load feeds: {ex.Message}");
+        }
+    }
+
+    private async Task LoadArticles()
+    {
+        try
+        {
+            isLoading = true;
+            
+            var queryParams = new List<string>();
+            if (!string.IsNullOrEmpty(searchQuery))
+                queryParams.Add($"q={Uri.EscapeDataString(searchQuery)}");
+            if (!string.IsNullOrEmpty(starredFilter))
+                queryParams.Add($"starred={starredFilter}");
+            if (!string.IsNullOrEmpty(selectedFeedId))
+                queryParams.Add($"feedId={Uri.EscapeDataString(selectedFeedId)}");
+            queryParams.Add($"page={currentPage}");
+            queryParams.Add($"pageSize={pageSize}");
+
+            var queryString = queryParams.Any() ? "?" + string.Join("&", queryParams) : "";
+            var response = await Http.GetFromJsonAsync<ArticlesResponse>($"/api/articles{queryString}");
+            articlesResponse = response;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load articles: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task LoadPage(int page)
+    {
+        currentPage = page;
+        await LoadArticles();
+    }
+
+    private async Task SearchArticles()
+    {
+        currentPage = 1;
+        await LoadArticles();
+    }
+
+    private async Task OnSearchKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await SearchArticles();
+        }
+    }
+
+    private async Task OnFilterChanged()
+    {
+        currentPage = 1;
+        await LoadArticles();
+    }
+
+    private void ViewNotes(string articleId)
+    {
+        Navigation.NavigateTo($"/articles/{articleId}/notes");
+    }
+}

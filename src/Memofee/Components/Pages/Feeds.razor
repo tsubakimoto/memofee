@@ -1,0 +1,248 @@
+@page "/feeds"
+@using Memofee.Dtos
+@inject HttpClient Http
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Feed Management - MemoFee</PageTitle>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>RSS/Atom Feeds</h1>
+                <button class="btn btn-primary" @onclick="ShowAddFeedForm">
+                    <i class="bi bi-plus-lg"></i> Add Feed
+                </button>
+            </div>
+
+            @if (isLoading)
+            {
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            }
+            else if (feeds.Any())
+            {
+                <div class="row">
+                    @foreach (var feed in feeds)
+                    {
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">@(feed.Title ?? "Untitled Feed")</h5>
+                                    <p class="card-text">
+                                        <small class="text-muted">@feed.Url</small>
+                                    </p>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            Added: @feed.CreatedAt.ToString("MMM dd, yyyy")
+                                        </small>
+                                    </p>
+                                    @if (feed.LastFetchedAt.HasValue)
+                                    {
+                                        <p class="card-text">
+                                            <small class="text-success">
+                                                Last updated: @feed.LastFetchedAt.Value.ToString("MMM dd, yyyy HH:mm")
+                                            </small>
+                                        </p>
+                                    }
+                                    @if (!string.IsNullOrEmpty(feed.LastError))
+                                    {
+                                        <p class="card-text">
+                                            <small class="text-danger">
+                                                Error: @feed.LastError
+                                            </small>
+                                        </p>
+                                    }
+                                </div>
+                                <div class="card-footer">
+                                    <div class="btn-group w-100" role="group">
+                                        <button class="btn btn-outline-primary" @onclick="() => RefreshFeed(feed.Id)">
+                                            <i class="bi bi-arrow-clockwise"></i> Refresh
+                                        </button>
+                                        <button class="btn btn-outline-danger" @onclick="() => DeleteFeed(feed.Id)">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-rss display-1 text-muted"></i>
+                    <h3 class="mt-3">No feeds added yet</h3>
+                    <p class="text-muted">Start by adding your first RSS or Atom feed.</p>
+                    <button class="btn btn-primary" @onclick="ShowAddFeedForm">
+                        Add Your First Feed
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Add Feed Modal -->
+<div class="modal fade" id="addFeedModal" tabindex="-1" aria-labelledby="addFeedModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addFeedModalLabel">Add New Feed</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <EditForm Model="newFeedRequest" OnValidSubmit="AddFeed">
+                <DataAnnotationsValidator />
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="feedUrl" class="form-label">Feed URL</label>
+                        <InputText id="feedUrl" class="form-control" @bind-Value="newFeedRequest.Url" 
+                                   placeholder="https://example.com/feed.xml" />
+                        <ValidationMessage For="@(() => newFeedRequest.Url)" />
+                        <div class="form-text">
+                            Enter the URL of an RSS or Atom feed.
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(addFeedError))
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            @addFeedError
+                        </div>
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" disabled="@isAddingFeed">
+                        @if (isAddingFeed)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        }
+                        Add Feed
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<FeedResponse> feeds = new();
+    private CreateFeedRequest newFeedRequest = new();
+    private bool isLoading = true;
+    private bool isAddingFeed = false;
+    private string addFeedError = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadFeeds();
+    }
+
+    private async Task LoadFeeds()
+    {
+        try
+        {
+            isLoading = true;
+            var response = await Http.GetFromJsonAsync<List<FeedResponse>>("/api/feeds");
+            feeds = response ?? new List<FeedResponse>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to load feeds: {ex.Message}");
+            // TODO: Show user-friendly error message
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task ShowAddFeedForm()
+    {
+        newFeedRequest = new CreateFeedRequest();
+        addFeedError = string.Empty;
+        await JSRuntime.InvokeVoidAsync("eval", "new bootstrap.Modal(document.getElementById('addFeedModal')).show()");
+    }
+
+    private async Task AddFeed()
+    {
+        try
+        {
+            isAddingFeed = true;
+            addFeedError = string.Empty;
+
+            var response = await Http.PostAsJsonAsync("/api/feeds", newFeedRequest);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                await JSRuntime.InvokeVoidAsync("eval", "bootstrap.Modal.getInstance(document.getElementById('addFeedModal')).hide()");
+                await LoadFeeds();
+            }
+            else if (response.StatusCode == System.Net.HttpStatusCode.Conflict)
+            {
+                addFeedError = "A feed with this URL already exists.";
+            }
+            else
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                addFeedError = errorMessage;
+            }
+        }
+        catch (Exception ex)
+        {
+            addFeedError = $"Failed to add feed: {ex.Message}";
+        }
+        finally
+        {
+            isAddingFeed = false;
+        }
+    }
+
+    private async Task RefreshFeed(string feedId)
+    {
+        try
+        {
+            var response = await Http.PostAsync($"/api/feeds/{feedId}/refresh", null);
+            if (response.IsSuccessStatusCode)
+            {
+                await LoadFeeds();
+            }
+            else
+            {
+                // TODO: Show error message
+                Console.WriteLine($"Failed to refresh feed: {response.StatusCode}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to refresh feed: {ex.Message}");
+        }
+    }
+
+    private async Task DeleteFeed(string feedId)
+    {
+        var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this feed? All associated articles and notes will be removed.");
+        if (!confirmed) return;
+
+        try
+        {
+            var response = await Http.DeleteAsync($"/api/feeds/{feedId}");
+            if (response.IsSuccessStatusCode)
+            {
+                await LoadFeeds();
+            }
+            else
+            {
+                // TODO: Show error message
+                Console.WriteLine($"Failed to delete feed: {response.StatusCode}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to delete feed: {ex.Message}");
+        }
+    }
+}

@@ -1,7 +1,131 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>MemoFee - Personal Feed Notes</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-5">
+                <h1 class="display-4 mb-3">
+                    <i class="bi bi-rss text-primary"></i> MemoFee
+                </h1>
+                <p class="lead">
+                    Your personal RSS/Atom feed reader with note-taking capabilities
+                </p>
+                <p class="text-muted">
+                    Collect articles from your favorite feeds and add personal notes, tags, and stars to organize your reading.
+                </p>
+            </div>
 
-Welcome to your new app.
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="bi bi-rss display-4 text-primary"></i>
+                            </div>
+                            <h5 class="card-title">Manage Feeds</h5>
+                            <p class="card-text">
+                                Add and manage your RSS/Atom feeds from blogs, news sites, and other sources.
+                            </p>
+                            <a href="/feeds" class="btn btn-primary">
+                                Manage Feeds
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="bi bi-journal-text display-4 text-success"></i>
+                            </div>
+                            <h5 class="card-title">Browse Articles</h5>
+                            <p class="card-text">
+                                Search and filter through all articles collected from your feeds.
+                            </p>
+                            <a href="/articles" class="btn btn-success">
+                                Browse Articles
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card h-100 text-center">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <i class="bi bi-journal-plus display-4 text-info"></i>
+                            </div>
+                            <h5 class="card-title">Add Notes</h5>
+                            <p class="card-text">
+                                Add personal notes, tags, and stars to articles for better organization.
+                            </p>
+                            <a href="/articles" class="btn btn-info">
+                                Start Noting
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>
+                            <i class="bi bi-lightning"></i> Quick Start
+                        </h3>
+                        <ol>
+                            <li class="mb-2">
+                                <strong>Add a feed:</strong> Go to the <a href="/feeds">Feeds page</a> and add your first RSS/Atom feed URL.
+                            </li>
+                            <li class="mb-2">
+                                <strong>Browse articles:</strong> Visit the <a href="/articles">Articles page</a> to see articles from your feeds.
+                            </li>
+                            <li class="mb-2">
+                                <strong>Add notes:</strong> Click on any article to add personal notes, tags, and stars.
+                            </li>
+                        </ol>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>
+                            <i class="bi bi-info-circle"></i> Features
+                        </h3>
+                        <ul>
+                            <li class="mb-2">
+                                <strong>RSS/Atom Support:</strong> Works with any standard RSS or Atom feed
+                            </li>
+                            <li class="mb-2">
+                                <strong>Personal Notes:</strong> Add rich text notes to any article
+                            </li>
+                            <li class="mb-2">
+                                <strong>Tagging System:</strong> Organize articles with custom tags
+                            </li>
+                            <li class="mb-2">
+                                <strong>Star Articles:</strong> Mark important articles for easy access
+                            </li>
+                            <li class="mb-2">
+                                <strong>Search & Filter:</strong> Find articles by title, content, tags, or feed
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5 text-center">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="bi bi-shield-check text-success"></i> Secure & Private
+                        </h5>
+                        <p class="card-text">
+                            MemoFee is designed for single-user access with Azure App Service authentication. 
+                            Your notes and data are private and secure.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
