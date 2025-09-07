@@ -1,114 +1,114 @@
 ---
-description: 'Guidelines for building C# applications'
+description: 'C# アプリケーション構築のためのガイドライン'
 applyTo: '**/*.cs'
 ---
 
-# C# Development
+# C# 開発
 
-## C# Instructions
-- Always use the latest version C#, currently C# 13 features.
-- Write clear and concise comments for each function.
+## C# の指針
+- 常に最新の C# を使用します。現在は C# 13 の機能を想定します。
+- 各関数には明確で簡潔なコメントを記載します。
 
-## General Instructions
-- Make only high confidence suggestions when reviewing code changes.
-- Write code with good maintainability practices, including comments on why certain design decisions were made.
-- Handle edge cases and write clear exception handling.
-- For libraries or external dependencies, mention their usage and purpose in comments.
+## 一般的な指針
+- コードレビューでは、確信度の高い提案のみを行います。
+- 保守性を意識したコードを書き、なぜその設計判断に至ったかをコメントで残します。
+- エッジケースに対応し、明確な例外処理を記述します。
+- ライブラリや外部依存を使用する場合は、用途と目的をコメントで示します。
 
-## Naming Conventions
+## 命名規則
 
-- Follow PascalCase for component names, method names, and public members.
-- Use camelCase for private fields and local variables.
-- Prefix interface names with "I" (e.g., IUserService).
+- コンポーネント名、メソッド名、パブリックメンバーには PascalCase を使用します。
+- プライベートフィールドやローカル変数には camelCase を使用します。
+- インターフェイス名には「I」を接頭辞として付けます（例: IUserService）。
 
-## Formatting
+## フォーマット
 
-- Apply code-formatting style defined in `.editorconfig`.
-- Prefer file-scoped namespace declarations and single-line using directives.
-- Insert a newline before the opening curly brace of any code block (e.g., after `if`, `for`, `while`, `foreach`, `using`, `try`, etc.).
-- Ensure that the final return statement of a method is on its own line.
-- Use pattern matching and switch expressions wherever possible.
-- Use `nameof` instead of string literals when referring to member names.
-- Ensure that XML doc comments are created for any public APIs. When applicable, include `<example>` and `<code>` documentation in the comments.
+- `.editorconfig` に定義されたコード整形スタイルを適用します。
+- ファイルスコープの名前空間宣言と単一行の using ディレクティブを推奨します。
+- すべてのコードブロック（if、for、while、foreach、using、try など）の開き波括弧の直前に改行を入れます。
+- メソッドの最終 return 文は独立した行に配置します。
+- 可能な限りパターンマッチングや switch 式を使用します。
+- メンバー名を参照する際は文字列リテラルではなく `nameof` を使用します。
+- すべてのパブリック API には XML ドキュメントコメントを作成します。可能であれば `<example>` や `<code>` の記載も行います。
 
-## Project Setup and Structure
+## プロジェクトのセットアップと構成
 
-- Guide users through creating a new .NET project with the appropriate templates.
-- Explain the purpose of each generated file and folder to build understanding of the project structure.
-- Demonstrate how to organize code using feature folders or domain-driven design principles.
-- Show proper separation of concerns with models, services, and data access layers.
-- Explain the Program.cs and configuration system in ASP.NET Core 9 including environment-specific settings.
+- 適切なテンプレートを用いた .NET プロジェクトの新規作成を案内します。
+- 生成された各ファイルやフォルダーの役割を説明し、プロジェクト構造の理解を促します。
+- フィーチャーフォルダーや DDD の原則を用いたコードの整理方法を示します。
+- モデル、サービス、データアクセス層の関心の分離を適切に行います。
+- ASP.NET Core 9 における Program.cs と構成システム、環境別設定について説明します。
 
-## Nullable Reference Types
+## Null 許容参照型
 
-- Declare variables non-nullable, and check for `null` at entry points.
-- Always use `is null` or `is not null` instead of `== null` or `!= null`.
-- Trust the C# null annotations and don't add null checks when the type system says a value cannot be null.
+- 変数は非 null を前提に宣言し、エントリポイントで `null` をチェックします。
+- `== null` や `!= null` ではなく、常に `is null` または `is not null` を使用します。
+- C# の null アノテーションを信頼し、型システムが非 null と保証する値に不要な null チェックを追加しません。
 
-## Data Access Patterns
+## データアクセスパターン
 
-- Guide the implementation of a data access layer using Entity Framework Core.
-- Explain different options (SQL Server, SQLite, In-Memory) for development and production.
-- Demonstrate repository pattern implementation and when it's beneficial.
-- Show how to implement database migrations and data seeding.
-- Explain efficient query patterns to avoid common performance issues.
+- Entity Framework Core を用いたデータアクセス層の実装を案内します。
+- 開発・本番における選択肢（SQL Server、SQLite、In-Memory）を説明します。
+- リポジトリパターンの実装方法と有効な場面を示します。
+- データベースマイグレーションとデータシーディングの実装方法を示します。
+- 典型的なパフォーマンス問題を避ける効率的なクエリパターンを説明します。
 
-## Authentication and Authorization
+## 認証と認可
 
-- Guide users through implementing authentication using JWT Bearer tokens.
-- Explain OAuth 2.0 and OpenID Connect concepts as they relate to ASP.NET Core.
-- Show how to implement role-based and policy-based authorization.
-- Demonstrate integration with Microsoft Entra ID (formerly Azure AD).
-- Explain how to secure both controller-based and Minimal APIs consistently.
+- JWT Bearer トークンを用いた認証の実装を案内します。
+- ASP.NET Core における OAuth 2.0 と OpenID Connect の概念を説明します。
+- ロールベースおよびポリシーベースの認可の実装方法を示します。
+- Microsoft Entra ID（旧 Azure AD）との統合を例示します。
+- コントローラーベースと Minimal API の双方で一貫した保護を行う方法を説明します。
 
-## Validation and Error Handling
+## 検証とエラーハンドリング
 
-- Guide the implementation of model validation using data annotations and FluentValidation.
-- Explain the validation pipeline and how to customize validation responses.
-- Demonstrate a global exception handling strategy using middleware.
-- Show how to create consistent error responses across the API.
-- Explain problem details (RFC 7807) implementation for standardized error responses.
+- データアノテーションおよび FluentValidation を用いたモデル検証の実装を案内します。
+- 検証パイプラインと、検証応答のカスタマイズ方法を説明します。
+- ミドルウェアを用いたグローバル例外処理戦略を示します。
+- API 全体で一貫したエラーレスポンスを作成する方法を示します。
+- 標準化されたエラー応答のための Problem Details（RFC 7807）の実装を説明します。
 
-## API Versioning and Documentation
+## API バージョニングとドキュメント
 
-- Guide users through implementing and explaining API versioning strategies.
-- Demonstrate Swagger/OpenAPI implementation with proper documentation.
-- Show how to document endpoints, parameters, responses, and authentication.
-- Explain versioning in both controller-based and Minimal APIs.
-- Guide users on creating meaningful API documentation that helps consumers.
+- API バージョニング戦略の実装と解説を行います。
+- Swagger/OpenAPI を用いた適切なドキュメント化を例示します。
+- エンドポイント、パラメーター、応答、認証の記述方法を示します。
+- コントローラーベースと Minimal API の双方でのバージョニング手法を説明します。
+- 利用者に有用な API ドキュメントの作成を指南します。
 
-## Logging and Monitoring
+## ロギングと監視
 
-- Guide the implementation of structured logging using Serilog or other providers.
-- Explain the logging levels and when to use each.
-- Demonstrate integration with Application Insights for telemetry collection.
-- Show how to implement custom telemetry and correlation IDs for request tracking.
-- Explain how to monitor API performance, errors, and usage patterns.
+- Serilog などのプロバイダーを用いた構造化ロギングの実装を案内します。
+- ログレベルの意味と使い分けを説明します。
+- テレメトリ収集のための Application Insights との統合を例示します。
+- リクエスト追跡のためのカスタムテレメトリと相関 ID の実装方法を示します。
+- API のパフォーマンス、エラー、利用状況の監視方法を説明します。
 
-## Testing
+## テスト
 
-- Always include test cases for critical paths of the application.
-- Guide users through creating unit tests.
-- Do not emit "Act", "Arrange" or "Assert" comments.
-- Copy existing style in nearby files for test method names and capitalization.
-- Explain integration testing approaches for API endpoints.
-- Demonstrate how to mock dependencies for effective testing.
-- Show how to test authentication and authorization logic.
-- Explain test-driven development principles as applied to API development.
+- アプリケーションのクリティカルパスには必ずテストケースを含めます。
+- 単体テストの作成方法を案内します。
+- "Act"、"Arrange"、"Assert" のコメントは出力しません。
+- 既存ファイルのスタイルに合わせてテストメソッド名と大文字小文字を統一します。
+- API エンドポイントの結合テスト手法を説明します。
+- 依存関係のモックによる効果的なテスト方法を示します。
+- 認証・認可ロジックのテスト方法を示します。
+- API 開発における TDD の原則を説明します。
 
-## Performance Optimization
+## パフォーマンス最適化
 
-- Guide users on implementing caching strategies (in-memory, distributed, response caching).
-- Explain asynchronous programming patterns and why they matter for API performance.
-- Demonstrate pagination, filtering, and sorting for large data sets.
-- Show how to implement compression and other performance optimizations.
-- Explain how to measure and benchmark API performance.
+- キャッシュ戦略（インメモリ、分散、レスポンスキャッシュ）の実装を案内します。
+- 非同期プログラミングパターンと、API パフォーマンスにおける重要性を説明します。
+- 大規模データに対するページング、フィルタリング、ソートを例示します。
+- 圧縮などのパフォーマンス最適化の実装方法を示します。
+- API パフォーマンスの計測とベンチマーク方法を説明します。
 
-## Deployment and DevOps
+## デプロイと DevOps
 
-- Guide users through containerizing their API using .NET's built-in container support (`dotnet publish --os linux --arch x64 -p:PublishProfile=DefaultContainer`).
-- Explain the differences between manual Dockerfile creation and .NET's container publishing features.
-- Explain CI/CD pipelines for NET applications.
-- Demonstrate deployment to Azure App Service, Azure Container Apps, or other hosting options.
-- Show how to implement health checks and readiness probes.
-- Explain environment-specific configurations for different deployment stages.
+- .NET の組み込みコンテナサポートを用いた API のコンテナ化を案内します（`dotnet publish --os linux --arch x64 -p:PublishProfile=DefaultContainer`）。
+- 手書きの Dockerfile と .NET のコンテナ発行機能の違いを説明します。
+- .NET アプリケーション向け CI/CD パイプラインを説明します。
+- Azure App Service、Azure Container Apps などへのデプロイ方法を例示します。
+- ヘルスチェックや Readiness Probe の実装方法を示します。
+- デプロイ段階ごとの環境別構成の考え方を説明します。
